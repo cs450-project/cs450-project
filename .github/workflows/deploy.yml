@@ -24,7 +24,7 @@ jobs:
     defaults:
       run:
         working-directory: frontend
-    if: github.ref == 'refs/head/deploy'
+    if: github.ref == 'refs/heads/deploy'
     steps:
       - uses: actions/checkout@v2
       - name: build
