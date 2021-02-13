@@ -24,9 +24,9 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+    if: github.ref == 'refs/head/deploy'
     steps:
       - uses: actions/checkout@v2
-      - if: github.ref == 'refs/head/deploy'
       - name: build
         run: |
           npm install --only=prod
