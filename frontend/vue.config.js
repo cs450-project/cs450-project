@@ -1,3 +1,3 @@
 module.export = {
-    publicPath: "./"
+    publicPath: "/~alauni/cs450/"
 }
