@@ -30,7 +30,7 @@ jobs:
       - name: build
         run: |
           npm install --only=prod
-          npm build
+          npm run build
       - name: ssh deploy
         uses: easingthemes/ssh-deploy@v2.1.5
         env:
