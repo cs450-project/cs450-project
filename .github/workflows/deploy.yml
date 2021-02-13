@@ -1,0 +1,45 @@
+name: SSH Deploy
+on:
+  push:
+    branches: [ $default-branch ]
+
+jobs:
+  build_and_test_frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: npm i, build, test
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+        run: |
+          npm install
+          npm run build --if-present
+          npm test
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend_dist
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: download dist
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend_dist
+
+      - name: ssh deploy
+        uses: actions/checkout@v2
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          SOURCE: "dist/"
+          TARGET: ${{ secrets.DEPLOY_TARGET }}
