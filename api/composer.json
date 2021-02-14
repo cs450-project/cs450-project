@@ -1,12 +1,14 @@
 {
-    "autoload": {
-        "classmap": [
-	     "src/"
-	]
-    },
-    "name": "alauni/cs450-backend",
+    "name": "cs450-group1/backend",
     "type": "project",
     "license": "MIT",
+    "autoload": {
+        "autoload": {
+            "psr-4": {
+                "CS450\\": "src/"
+            }
+        }
+    },
     "authors": [
         {
             "name": "Alex Launi",
