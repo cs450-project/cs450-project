@@ -42,7 +42,7 @@ jobs:
 
   deploy_backend:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/deploy'
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
       - name: ssh deploy
