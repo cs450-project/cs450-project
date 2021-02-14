@@ -47,6 +47,7 @@ jobs:
         working-directory: ./api
     steps:
       - uses: actions/checkout@v2
+      - run: ls -la
       - uses: php-actions/composer@v5
       - uses: php-actions/phpunit@v2
         with:
