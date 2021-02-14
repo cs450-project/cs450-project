@@ -47,8 +47,9 @@ jobs:
         working-directory: ./api
     steps:
       - uses: actions/checkout@v2
-      - run: ls -la
       - uses: php-actions/composer@v5
+        with:
+          args: --working-directory=api
       - uses: php-actions/phpunit@v2
         with:
           bootstrap: vendor/autoload.php
