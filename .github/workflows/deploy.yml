@@ -52,7 +52,7 @@ jobs:
           args: --working-dir=api
       - uses: php-actions/phpunit@v2
         with:
-          bootstrap: vendor/autoload.php
+          bootstrap: api/vendor/autoload.php
           args: --coverage-text
 
   deploy_backend:
