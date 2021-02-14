@@ -2,6 +2,10 @@
 node_modules
 **/dist
 
+# php
+api/composer.phar
+api/vendor
+api/config.php
 
 # local env files
 .env.local

@@ -39,3 +39,17 @@ jobs:
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           SOURCE: "frontend/dist/"
           TARGET: ${{ secrets.DEPLOY_TARGET }}
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/deploy'
+    steps:
+      - uses: actions/checkout@v2
+      - name: ssh deploy
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          SOURCE: "api"
+          TARGET: ${{ secrets.DEPLOY_TARGET }}/api

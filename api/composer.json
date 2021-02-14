@@ -1,0 +1,14 @@
+{
+    "name": "alauni/cs450-backend",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Launi",
+            "email": "alaun001@odu.edu"
+        }
+    ],
+    "require": {
+        "adhocore/jwt": "^1.1"
+    }
+}
