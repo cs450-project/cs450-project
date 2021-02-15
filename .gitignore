@@ -5,8 +5,7 @@ sql-datadir
 # php
 api/composer.phar
 api/vendor
-api/config.php
-
+api/tests/.phpunit.result.cache
 # local env files
 .env.local
 .env.*.local
@@ -25,3 +24,5 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+**/logs/**
