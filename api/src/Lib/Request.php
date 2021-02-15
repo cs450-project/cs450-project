@@ -6,8 +6,12 @@ class Request
     public $reqMethod;
     public $contentType;
 
-    public function __construct($params = [])
+    private $dataInputFile;
+
+    public function __construct($params = [], $input = "php://input")
     {
+        $this->dataInputFile = $input;
+
         $this->params = $params;
         $this->reqMethod = trim($_SERVER['REQUEST_METHOD']);
         $this->contentType = !empty($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
@@ -19,10 +23,7 @@ class Request
             return '';
         }
 
-        $body = [];
-        foreach ($_POST as $key => $value) {
-            $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-        }
+        $body = filter_var_array($_POST, FILTER_SANITIZE_STRING, true);
 
         return $body;
     }
@@ -38,9 +39,7 @@ class Request
         }
 
         // Receive the RAW post data.
-        $content = trim(file_get_contents("php://input"));
-        $decoded = json_decode($content);
-
-        return $decoded;
+        $content = trim(file_get_contents($this->dataInputFile));
+        return json_decode($content);
     }
 }
