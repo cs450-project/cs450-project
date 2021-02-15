@@ -4,23 +4,23 @@ use PHPUnit\Framework\TestCase;
 use App\Types\EmailAddress;
 
 final class EmailAddressTest extends TestCase {
-	public function testCanBeCreatedFromValidEmailAddres(): void {
-		$this->assertInstanceOf(
-			EmailAddress::class,
-			EmailAddress::fromString("user+dingus2@woopwoop.net")
-		);
-	}
+    public function testCanBeCreatedFromValidEmailAddres(): void {
+        $this->assertInstanceOf(
+            EmailAddress::class,
+            EmailAddress::fromString("user+dingus2@woopwoop.net")
+        );
+    }
 
-	public function testCannotBeCreatedFromInvalidEmailAddress(): void {
-		$this->expectException(InvalidArgumentException::class);
+    public function testCannotBeCreatedFromInvalidEmailAddress(): void {
+        $this->expectException(InvalidArgumentException::class);
 
-		EmailAddress::fromString("this_is_invalid@xxx");
-	}
+        EmailAddress::fromString("this_is_invalid@xxx");
+    }
 
-	public function testCanBeUsedAsString(): void {
-		$this->assertEquals(
-			"bigdaddyflex@aol.com",
-			EmailAddress::fromString("bigdaddyflex@aol.com")
-		);
-	}
+    public function testCanBeUsedAsString(): void {
+        $this->assertEquals(
+            "bigdaddyflex@aol.com",
+            EmailAddress::fromString("bigdaddyflex@aol.com")
+        );
+    }
 }
