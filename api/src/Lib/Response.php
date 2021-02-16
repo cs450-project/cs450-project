@@ -4,12 +4,22 @@ namespace App\Lib;
 
 class Response
 {
-    private $status = 200;
+    private $status;
 
-    public function status(int $code)
-    {
+    private function __construct($code) {
         $this->status = $code;
-        return $this;
+    }
+
+    public static function withCode($code): self {
+        return new Response($code);
+    }
+
+    public static function ok(): self {
+        return self::withCode(200);
+    }
+
+    public static function error(): self {
+        return self::withCode(400);
     }
     
     public function toJSON($data = [])
