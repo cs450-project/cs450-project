@@ -14,7 +14,7 @@ class Request
 
         $this->params = $params;
         $this->reqMethod = trim($_SERVER['REQUEST_METHOD']);
-        $this->contentType = !empty($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+        $this->contentType = trim($_SERVER["CONTENT_TYPE"] ?? "");
     }
 
     public function getBody()

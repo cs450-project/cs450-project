@@ -5,6 +5,8 @@ use App\Lib\Request;
 
 final class RequestTest extends TestCase {
     public function testCanBeCreated(): void {
+        $_SERVER['REQUEST_METHOD'] = "GET";
+
         $this->assertInstanceOf(
             Request::class,
             new Request()
@@ -69,6 +71,19 @@ final class RequestTest extends TestCase {
                     "getting" => "cray"
                 ),
             )
+        );
+    }
+
+    public function testEmptyForNonJSONOnPOST() {
+        // Given a get request
+        $_SERVER['REQUEST_METHOD'] = "POST";
+        $_SERVER['CONTENT_TYPE'] = "text/html; charset=UTF-8";
+
+        $req = new Request([], __DIR__ . "/testdata/jsonbody.json");
+
+        $this->assertEquals(
+            $req->getJSON(),
+            []
         );
     }
 }
