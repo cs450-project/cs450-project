@@ -4,10 +4,12 @@ class Config
 {
     private static $config;
 
-    public static function get(string $key, $default = null)
+    public static function get(string $key, $default = null, $configFile = null)
     {
-        if (is_null(self::$config)) {
-            self::$config = require_once(__DIR__ . '/../../config.php');
+        $configFile = $configFile ?? __DIR__ . "/../../config.php";
+
+        if (file_exists($configFile) && is_null(self::$config)) {
+            self::$config = include_once($configFile);
         }
 
         return !empty(self::$config[$key])
