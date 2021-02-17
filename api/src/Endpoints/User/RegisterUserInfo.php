@@ -4,7 +4,7 @@ use App\Lib\Enum;
 use App\Types\Password;
 use App\Types\EmailAddress;
 
-abstract class UserRole extends Enum {
+abstract class UserRole {
     const SUPERUSER = 1;
     const ADMINISTRATOR = 2;
     const FACULTY = 3;
