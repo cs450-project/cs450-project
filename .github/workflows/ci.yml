@@ -57,6 +57,7 @@ jobs:
           bootstrap: api/vendor/autoload.php
           args: --coverage-text
           configuration: api/tests/phpunit.xml
+          php_extensions: xdebug
 
   deploy_backend:
     runs-on: ubuntu-latest
