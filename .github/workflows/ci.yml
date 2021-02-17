@@ -42,22 +42,22 @@ jobs:
 
   test_backend:
     runs-on: ubuntu-latest
-    env:
-      XDEDUG_MODE: coverage
     defaults:
       run:
         working-directory: ./api
     steps:
-      - uses: actions/checkout@v2
-      - uses: php-actions/composer@v5
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP and extensions
+        uses: shivammathur/setup-php@v2
         with:
-          args: --working-dir=api
-      - uses: php-actions/phpunit@v2
-        with:
-          bootstrap: api/vendor/autoload.php
-          args: --coverage-text
-          configuration: api/tests/phpunit.xml
-          php_extensions: xdebug
+          php-version: '7.3'
+          extensions: xdebug
+          coverage: xdebug
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist -o
+      - name: Run unit tests
+        run: vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text --bootstrap vendor/autoload.php tests
 
   deploy_backend:
     runs-on: ubuntu-latest
