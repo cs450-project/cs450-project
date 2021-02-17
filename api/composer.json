@@ -12,6 +12,18 @@
         {
             "name": "Alex Launi",
             "email": "alaun001@odu.edu"
+        },
+        {
+            "name": "Suraksha Tasgaonkar",
+            "email": "stasg001@odu.edu"
+        },
+        {
+            "name": "Jason Rich",
+            "email": "jrich069@odu.edu"
+        },
+        {
+            "name": "Josh Farr",
+            "email": "jfarr001@odu.edu"
         }
     ],
     "require": {
