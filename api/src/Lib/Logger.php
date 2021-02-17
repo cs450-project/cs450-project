@@ -4,6 +4,9 @@ namespace App\Lib;
 use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Logger extends \Monolog\Logger
 {
     private const DEFAULT_LOG_PATH = __DIR__ . '/../../logs';

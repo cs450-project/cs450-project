@@ -10,6 +10,9 @@ abstract class UserRole {
     const FACULTY = 3;
 }
 
+/**
+ * @codeCoverageIgnore
+ */
 final class RegisterUserInfo {
     public $name;
     public $email;

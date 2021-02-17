@@ -5,6 +5,9 @@ use App\Lib\Request;
 use App\Lib\Response;
 use App\Endpoints\User\RegisterUserInfo;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class User {
     private function __construct() {}
 
