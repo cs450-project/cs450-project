@@ -20,7 +20,7 @@ final class RegisterUserInfo {
     public $created_at;
     public $role;
 
-    public function create(string $name, string $email, string $password, $role = UserRole::FACULTY): ?self {
+    public static function create(string $name, string $email, string $password, $role = UserRole::FACULTY): ?self {
         $email = EmailAddress::fromString($email);
         $password = Password::fromString($password);
 
@@ -28,7 +28,7 @@ final class RegisterUserInfo {
     }
 
     private function __construct(string $name, EmailAddress $email, Password $password, $role) {
-        date_default_timezone_set("America/New York");
+        date_default_timezone_set("America/New_York");
 
         $this->role = $role;
         $this->name = $name;
