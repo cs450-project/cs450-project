@@ -65,13 +65,51 @@ final class ResponseTest extends TestCase {
      * @runInSeparateProcess
      */
     public function testSetsJSONHeaderType(): void {
-        $res = Response::error();
+        $res = Response::ok();
         $res->toJSON();
-        
+
         $headers = xdebug_get_headers();
         $this->assertContains(
             'Content-Type: application/json',
             $headers
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReturnsNotingAsEmptyJSONArray(): void {
+        $res = Response::ok();
+        $json = $res->toJSON();
+
+        $headers = xdebug_get_headers();
+        $this->assertEquals(
+            '[]',
+            $json
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testReturnsAsJSON(): void {
+        $res = Response::ok();
+
+        $inputData = (object) array(
+            "LA" => "Black Flag",
+            "DC" => "Grey Matter",
+            "Chicago" => "Shellac",
+            "Philly" => "Blacklisted",
+        );
+
+        $expected = json_encode($inputData);
+
+        $json = $res->toJSON($inputData);
+
+        $headers = xdebug_get_headers();
+        $this->assertEquals(
+            $expected,
+            $json
         );
     }
 }
