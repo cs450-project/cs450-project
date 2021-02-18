@@ -1,6 +1,5 @@
 <?php namespace App\Endpoints\User;
 
-use App\Lib\Enum;
 use App\Types\Password;
 use App\Types\EmailAddress;
 
