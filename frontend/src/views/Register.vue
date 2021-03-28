@@ -39,13 +39,15 @@
             Passwords must
             <ul>
               <li v-if="!has1Capital">have at least 1 capital</li>
-              <li v-if="!isLongEnough">be longer than 5 characters</li>
+              <li v-if="!isLongEnough">
+                be longer than {{ minPasswordLen }} characters
+              </li>
             </ul>
           </template>
         </Borat>
       </b-form-group>
 
-      <b-form-group label="Re-enter Password:" label-for="password">
+      <b-form-group label="Re-enter Password:" label-for="password-verify">
         <Borat :validate="passwordsMatch">
           <template v-slot:input>
             <b-form-input
@@ -53,7 +55,6 @@
               v-model="verify.password"
               placeholder="Password again please"
               type="password"
-              :state="passwordsMatch"
               required
             ></b-form-input>
           </template>
@@ -74,6 +75,12 @@ import Borat from "@/components/BoratValidated.vue";
 export default Vue.extend({
   name: "Register",
   components: { Borat },
+  props: {
+    minPasswordLen: {
+      type: Number,
+      default: 5,
+    },
+  },
   data() {
     return {
       form: {
@@ -91,7 +98,7 @@ export default Vue.extend({
       return this.isLongEnough && this.has1Capital;
     },
     isLongEnough(): boolean {
-      return this.form.password.length > 4;
+      return this.form.password.length >= this.minPasswordLen;
     },
     has1Capital(): boolean {
       return [...this.form.password].some(
