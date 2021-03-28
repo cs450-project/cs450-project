@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "test": "vendor/bin/phpunit tests --color",
+        "test:watch": "watch 'npm run --silent test'"
+    },
+	"devDependencies": {
+		"watch": "^1.0.2"
+	}
+}
