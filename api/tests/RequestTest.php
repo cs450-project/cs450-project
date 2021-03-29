@@ -74,6 +74,27 @@ final class RequestTest extends TestCase {
         );
     }
 
+    public function testJSONOnPOSTComplexContentType() {
+        // Given a get request
+        $_SERVER['REQUEST_METHOD'] = "POST";
+        $_SERVER['CONTENT_TYPE'] = "application/json;charset=UTF-8";
+        $req = new Request([], __DIR__ . "/testdata/jsonbody.json");
+
+        $this->assertEquals(
+            $req->getJSON(),
+            (object) array(
+                "field1" => "ice cream",
+                "field2" => "🤷🏻 gotta test emoji amiright",
+                "arrays" => array(
+                    "banana sandwiches", "hot dogs"
+                ),
+                "an object" => (object) array(
+                    "getting" => "cray"
+                ),
+            )
+        );
+    }
+
     public function testEmptyForNonJSONOnPOST() {
         // Given a get request
         $_SERVER['REQUEST_METHOD'] = "POST";

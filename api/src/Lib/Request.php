@@ -34,7 +34,7 @@ class Request
             return [];
         }
 
-        if (strcasecmp($this->contentType, 'application/json') !== 0) {
+        if (strpos($this->contentType, 'application/json') !== 0) {
             return [];
         }
 
