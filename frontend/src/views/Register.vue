@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form @submit="onSubmit">
+    <b-form :class="{ shake: registrationRejected }" @submit="onSubmit">
       <b-form-group label="Your Name:" label-for="name">
         <b-form-input
           id="name"
@@ -47,18 +47,18 @@
         </Borat>
       </b-form-group>
 
-      <b-form-group label="Re-enter Password:" label-for="password-verify">
-        <Borat :validate="passwordsMatch">
+      <b-form-group label="Re-enter yourpassword:" label-for="password-verify">
+        <Borat :isValid="passwordsMatch">
           <template v-slot:input>
             <b-form-input
               id="password-verify"
               v-model="verify.password"
-              placeholder="Password again please"
+              placeholder="Password"
               type="password"
               required
             ></b-form-input>
           </template>
-          <template v-slot:invalid-msg>Passwords must match</template>
+          <template v-slot:invalid-msg> Passwords must match </template>
         </Borat>
       </b-form-group>
       <div class="ml-auto">
@@ -70,7 +70,13 @@
 
 <script lang="ts">
 import Vue from "vue";
+import axios from "axios";
 import Borat from "@/components/BoratValidated.vue";
+
+interface RegistrationResponse {
+  registered: boolean;
+  error: string;
+}
 
 export default Vue.extend({
   name: "Register",
@@ -91,6 +97,7 @@ export default Vue.extend({
       verify: {
         password: "",
       },
+      registrationRejected: false,
     };
   },
   computed: {
@@ -101,9 +108,7 @@ export default Vue.extend({
       return this.form.password.length >= this.minPasswordLen;
     },
     has1Capital(): boolean {
-      return [...this.form.password].some(
-        (char) => char === char.toLocaleUpperCase()
-      );
+      return this.form.password.match(/[A-Z]/) !== null;
     },
     passwordsMatch(): boolean {
       return this.pwRequirements && this.form.password === this.verify.password;
@@ -112,8 +117,14 @@ export default Vue.extend({
   methods: {
     onSubmit(event: Event): void {
       event.preventDefault();
-      alert(JSON.stringify(this.form));
+      axios.post("/register.php", this.form).then((data) => {
+        this.registrationRejected = !data;
+      });
     },
   },
 });
 </script>
+
+<style lang="scss">
+@import "@/assets/scss/cs450.scss";
+</style>
