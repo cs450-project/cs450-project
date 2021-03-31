@@ -26,7 +26,7 @@ try {
 
     echo Response::ok()->toJSON($payload);
 } catch (InvalidArgumentException $e) {
-    echo Response::error()->toJSON((object) array(
+    echo Response::error()->toJSON(array(
         'message' => $e->getMessage(),
     ));
 }
