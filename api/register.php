@@ -20,8 +20,11 @@ try {
         $register_data->password
     );
 
-    echo Response::ok()
-        ->toJSON(User::register($userInfo));
+    $payload = array(
+        'token' => User::register($userInfo)
+    );
+
+    echo Response::ok()->toJSON($payload);
 } catch (InvalidArgumentException $e) {
     echo Response::error()->toJSON((object) array(
         'message' => $e->getMessage(),

@@ -3,6 +3,7 @@ dependencies:
   bootstrap: 4.6.0
   bootstrap-vue: 2.21.2_vue@2.6.12
   core-js: 3.9.1
+  ts-dot-prop: 1.4.3
   vue: 2.6.12
   vue-router: 3.5.1
   vuex: 3.6.2_vue@2.6.12
@@ -2549,7 +2550,7 @@ packages:
       integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
   /axios/0.21.1:
     dependencies:
-      follow-redirects: 1.13.3_debug@4.3.1
+      follow-redirects: 1.13.3
     dev: false
     resolution:
       integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
@@ -5185,9 +5186,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-3Z4XhFZ3992uIq0XOqb9AreonueSYphE6oYbpt5+3u06JWklbsPkNv3ZKkP9Bz/r+1MWCaMoSQ28P85+1Yc77w==
-  /follow-redirects/1.13.3_debug@4.3.1:
-    dependencies:
-      debug: 4.3.1
+  /follow-redirects/1.13.3:
     engines:
       node: '>=4.0'
     peerDependencies:
@@ -5857,7 +5856,7 @@ packages:
   /http-proxy/1.18.1_debug@4.3.1:
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.13.3_debug@4.3.1
+      follow-redirects: 1.13.3
       requires-port: 1.0.0
     dev: true
     engines:
@@ -10560,6 +10559,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
+  /ts-dot-prop/1.4.3:
+    dependencies:
+      ts-util-is: 1.2.1
+    dev: false
+    resolution:
+      integrity: sha512-1msDawk2hmHBetEGw1uQiZS1o5dKfZNiT/8j/qZYVNZFs7HwPlz57elvFc3BNFg7DKCoVb/o5IGXsC+ptr6D5w==
   /ts-jest/24.3.0_jest@24.9.0:
     dependencies:
       bs-logger: 0.2.6
@@ -10609,6 +10614,10 @@ packages:
         optional: true
     resolution:
       integrity: sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==
+  /ts-util-is/1.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-OLukOZykUt2BsN3Qu1ptEiXbz6afpUSryVkMhupk3gv23cwyYWHhg0MONhkBnVCjJ4E8y4xG+cBWxMoYuXdQLA==
   /tsconfig/7.0.0:
     dependencies:
       '@types/strip-bom': 3.0.0
@@ -11600,6 +11609,7 @@ specifiers:
   prettier: ^2.2.1
   sass: ^1.26.5
   sass-loader: ^8.0.2
+  ts-dot-prop: ^1.4.3
   typescript: ~4.1.5
   vue: ^2.6.11
   vue-router: ^3.2.0
