@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <b-form :class="{ shake: registrationRejected }" @submit="onSubmit">
+  <div :class="{ shake: registrationRejected }">
+    <b-alert fade :show="registrationRejected" variant="danger">{{
+      registrationRejectedMsg
+    }}</b-alert>
+    <b-form @submit="onSubmit">
       <b-form-group label="Your Name:" label-for="name">
         <b-form-input
           id="name"
@@ -48,18 +51,16 @@
       </b-form-group>
 
       <b-form-group label="Re-enter yourpassword:" label-for="password-verify">
-        <Borat :isValid="passwordsMatch">
-          <template v-slot:input>
-            <b-form-input
-              id="password-verify"
-              v-model="verify.password"
-              placeholder="Password"
-              type="password"
-              required
-            ></b-form-input>
-          </template>
-          <template v-slot:invalid-msg> Passwords must match </template>
-        </Borat>
+        <b-form-input
+          id="password-verify"
+          v-model="verify.password"
+          placeholder="Password"
+          type="password"
+          required
+        ></b-form-input>
+        <b-form-invalid-feedback :state="passwordsMatch">
+          Passwords must match
+        </b-form-invalid-feedback>
       </b-form-group>
       <div class="ml-auto">
         <b-button type="submit" variant="primary">Submit</b-button>
@@ -71,11 +72,12 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
+import * as dot from "ts-dot-prop";
+import store from "@/store";
 import Borat from "@/components/BoratValidated.vue";
 
 interface RegistrationResponse {
-  registered: boolean;
-  error: string;
+  token: string;
 }
 
 export default Vue.extend({
@@ -97,7 +99,7 @@ export default Vue.extend({
       verify: {
         password: "",
       },
-      registrationRejected: false,
+      registrationRejectedMsg: "",
     };
   },
   computed: {
@@ -111,15 +113,34 @@ export default Vue.extend({
       return this.form.password.match(/[A-Z]/) !== null;
     },
     passwordsMatch(): boolean {
-      return this.pwRequirements && this.form.password === this.verify.password;
+      return this.form.password === this.verify.password;
+    },
+    registrationRejected(): boolean {
+      return this.registrationRejectedMsg !== "";
     },
   },
   methods: {
     onSubmit(event: Event): void {
       event.preventDefault();
-      axios.post("/register.php", this.form).then((data) => {
-        this.registrationRejected = !data;
-      });
+      if (!(this.passwordsMatch && this.pwRequirements)) {
+        return;
+      }
+
+      this.registrationRejectedMsg = "";
+
+      axios
+        .post<RegistrationResponse>("/register.php", this.form)
+        .then(({ data }) => {
+          const { token } = data;
+          store.commit("setToken", token);
+        })
+        .catch((error) => {
+          this.registrationRejectedMsg = dot.get(
+            error,
+            "response.data.message",
+            "Something unexpected happened 😵"
+          );
+        });
     },
   },
 });
