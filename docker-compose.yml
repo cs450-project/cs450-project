@@ -13,7 +13,7 @@ services:
   php:
     build: ./api
     volumes:
-      - ./api:/cs450-backend
+      - ./api:/var/www/html
     env_file:
       - dev.env
     links:
