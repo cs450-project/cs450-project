@@ -21,6 +21,8 @@ services:
 
   mysql:
     image: mysql:8.0.23
+    cap_add:
+      - SYS_NICE
     ports:
       - "3306:3306"
     volumes:
