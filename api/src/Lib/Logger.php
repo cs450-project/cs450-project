@@ -9,7 +9,7 @@ use Monolog\Handler\StreamHandler;
  */
 class Logger extends \Monolog\Logger
 {
-    private const DEFAULT_LOG_PATH = __DIR__ . '/../../logs';
+    private const DEFAULT_LOG_PATH = "php://stderr";
     private static $loggers = [];
 
     public function __construct(string $key = "app", $config = null)
@@ -19,7 +19,7 @@ class Logger extends \Monolog\Logger
         if (empty($config)) {
             $LOG_PATH = Config::get('LOG_PATH', self::DEFAULT_LOG_PATH);
             $config = [
-                'logFile' => "{$LOG_PATH}/{$key}.log",
+                'logFile' => "{$LOG_PATH}",
                 'logLevel' => \Monolog\Logger::DEBUG
             ];
         }
@@ -40,19 +40,7 @@ class Logger extends \Monolog\Logger
 
         // Error Log
         self::$loggers['error'] = new Logger('errors');
-        self::$loggers['error']->pushHandler(new StreamHandler("{$LOG_PATH}/errors.log"));
+        self::$loggers['error']->pushHandler(new StreamHandler("{$LOG_PATH}"));
         ErrorHandler::register(self::$loggers['error']);
-
-        if ($shouldLogRequests) {
-            // Request Log
-            $data = [
-                $_SERVER,
-                $_REQUEST,
-                trim(file_get_contents("php://input"))
-            ];
-            self::$loggers['request'] = new Logger('request');
-            self::$loggers['request']->pushHandler(new StreamHandler("{$LOG_PATH}/request.log"));
-            self::$loggers['request']->info("REQUEST", $data);
-        }
     }
 }
