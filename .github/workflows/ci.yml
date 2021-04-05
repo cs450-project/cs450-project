@@ -79,16 +79,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup PHP and extensions
-        uses: shivammathur/setup-php@v2
+      - name: Build the docker-compose stack
+        run: docker-compose up -d
+      - name: Sleep for 30 seconds
+        uses: kibertoad/wait-action@1.0.1
         with:
-          php-version: '7.3'
-          extensions: xdebug
-          coverage: xdebug
-      - name: Install dependencies
-        run: composer install --no-progress --prefer-dist -o
-      - name: Run unit tests
-        run: vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-text --bootstrap vendor/autoload.php tests
+          time: '30s'
+      - name: Check running containers
+        run: docker ps
+      - name: Run test suite
+        run: npm run test:docker
 
   deploy_backend:
     runs-on: ubuntu-latest
