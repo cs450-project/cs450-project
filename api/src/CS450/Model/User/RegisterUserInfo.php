@@ -1,7 +1,9 @@
-<?php namespace App\Endpoints\User;
+<?php 
 
-use App\Types\Password;
-use App\Types\EmailAddress;
+namespace CS450\Model\User;
+
+use CS450\Lib\Password;
+use CS450\Lib\EmailAddress;
 
 abstract class UserRole {
     const SUPERUSER = 1;

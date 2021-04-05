@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lib;
+namespace CS450\Lib;
 
 class Response
 {

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-use App\Lib\Response;
+use CS450\Lib\Response;
 
 final class ResponseTest extends TestCase {
     public function testCanBeCreatedWithOk(): void {

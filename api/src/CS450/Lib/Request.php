@@ -1,11 +1,14 @@
-<?php namespace App\Lib;
+<?php 
+
+namespace CS450\Lib;
 
 class Request
 {
+    public $uri;
     public $params;
-    public $reqMethod;
+    public $method;
     public $contentType;
-
+    
     private $dataInputFile;
 
     public function __construct($params = [], $input = "php://input")
@@ -13,13 +16,14 @@ class Request
         $this->dataInputFile = $input;
 
         $this->params = $params;
-        $this->reqMethod = trim($_SERVER['REQUEST_METHOD']);
+        $this->uri = $_SERVER['REQUEST_URI'];
+        $this->method = trim($_SERVER['REQUEST_METHOD']);
         $this->contentType = trim($_SERVER["CONTENT_TYPE"] ?? "");
     }
 
     public function getBody()
     {
-        if ($this->reqMethod !== 'POST') {
+        if ($this->method !== 'POST') {
             return '';
         }
 
@@ -30,7 +34,7 @@ class Request
 
     public function getJSON()
     {
-        if ($this->reqMethod !== 'POST') {
+        if ($this->method !== 'POST') {
             return [];
         }
 
@@ -40,6 +44,6 @@ class Request
 
         // Receive the RAW post data.
         $content = trim(file_get_contents($this->dataInputFile));
-        return json_decode($content);
+        return json_decode($content, true);
     }
 }

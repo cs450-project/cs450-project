@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-use App\Types\Password;
+use CS450\Lib\Password;
 
 final class PasswordTest extends TestCase {
     public function testCanBeCreatedFromValidPassword(): void {
