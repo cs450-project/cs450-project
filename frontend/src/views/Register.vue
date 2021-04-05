@@ -129,7 +129,7 @@ export default Vue.extend({
       this.registrationRejectedMsg = "";
 
       axios
-        .post<RegistrationResponse>("/register.php", this.form)
+        .post<RegistrationResponse>("/register", this.form)
         .then(({ data }) => {
           const { token } = data;
           store.commit("setToken", token);

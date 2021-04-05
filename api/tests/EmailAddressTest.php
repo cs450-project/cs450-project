@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-use App\Types\EmailAddress;
+use CS450\Lib\EmailAddress;
 
 final class EmailAddressTest extends TestCase {
     public function testCanBeCreatedFromValidEmailAddres(): void {

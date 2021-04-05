@@ -1,22 +1,30 @@
 <?php declare(strict_types=1);
-use Firebase\JWT\JWT;
 
 use PHPUnit\Framework\TestCase;
 
-use App\Lib\Config;
-use App\Endpoints\User;
-use App\Endpoints\User\RegisterUserInfo;
+use CS450\Model\User;
+use CS450\Model\User\RegisterUserInfo;
 
 final class UserTest extends TestCase {
+
+    private static $container;
+
+    public static function setUpBeforeClass(): void {
+        self::$container = require __DIR__ . '/testdata/bootstrap.php';
+    }
+
     public function testRegisterCreatesJwtWithGoodData(): void {
+        $jwtService = self::$container->get(CS450\Service\JwtService::class);
         $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345");
-        $jwt = User::register($registerInfo);
+
+        $user = self::$container->get('CS450\Model\User');
+        $jwt = $user->register($registerInfo);
 
         $this->assertTrue(
             array_key_exists(
                 'uid',
-                JWT::decode($jwt, 
-                    Config::get('KEY'), 
+                $jwtService->decode($jwt, 
+                    self::$container->get('jwt.key'), 
                     array('HS256')
                 )
             ),

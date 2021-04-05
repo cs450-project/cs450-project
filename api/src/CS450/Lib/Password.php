@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
-namespace App\Types;
+
+namespace CS450\Lib;
 
 final class Password {
     private const MIN_LENGTH = 4;

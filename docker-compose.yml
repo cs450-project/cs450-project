@@ -1,24 +1,16 @@
 version: "3.9"
 services:
   web:
+    build: ./api
     image: nginx:latest
     ports:
-      - "8888:8888"
+      - "8888:80"
     volumes:
-      - ./api:/cs450-backend
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    links:
-      - php
-
-  php:
-    build: ./api
-    volumes:
-      - ./api:/cs450-backend
+      - ./api:/var/www/html/
+      - ./apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
     env_file:
       - dev.env
-    links:
-      - mysql
-
+      
   mysql:
     image: mysql:8.0.23
     cap_add:
@@ -53,5 +45,3 @@ services:
     environment:
       - DOCKER_UI=true
       - CHOKIDAR_USEPOLLING=true
-    links:
-      - web
