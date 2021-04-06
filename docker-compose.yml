@@ -12,7 +12,7 @@ services:
       - dev.env
     environment:
       - XDEBUG_MODE=coverage
-      
+
   mysql:
     image: mysql:8.0.23
     cap_add:
@@ -25,7 +25,6 @@ services:
       - dev.env
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
-
 
   composer:
     image: composer:latest

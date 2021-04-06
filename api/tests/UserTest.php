@@ -8,9 +8,18 @@ use CS450\Model\User\RegisterUserInfo;
 final class UserTest extends TestCase {
 
     private static $container;
+    private static $db;
 
     public static function setUpBeforeClass(): void {
         self::$container = require __DIR__ . '/testdata/bootstrap.php';
+        self::$db = self::$container->get(CS450\Service\DbService::class);
+    }
+
+    protected function tearDown(): void
+    {
+        $conn = self::$db->getConnection();
+        $result = $conn->query("DELETE FROM tbl_fact_users WHERE 1=1;");
+        $this->assertTrue($result != false);
     }
 
     public function testRegisterCreatesJwtWithGoodData(): void {
@@ -29,5 +38,45 @@ final class UserTest extends TestCase {
                 )
             ),
         );
+    }
+
+    public function testRegisterLogsInWhenRegisteringValidUser(): void {
+        $jwtService = self::$container->get(CS450\Service\JwtService::class);
+        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345");
+
+        // Given a user is already registered
+        $user = self::$container->get('CS450\Model\User');
+        $user->register($registerInfo);
+        
+        // When user tries to register using the same username and password
+        // that they previously registered with
+        $jwt = $user->register($registerInfo);
+
+        // Then they are logged in
+        $this->assertTrue(
+            array_key_exists(
+                'uid',
+                $jwtService->decode($jwt, 
+                    self::$container->get('jwt.key'), 
+                    array('HS256')
+                )
+            ),
+        );
+    }
+
+    public function testThrowsWhenRegisteredUserReregistersWithNewPassword(): void {
+        $jwtService = self::$container->get(CS450\Service\JwtService::class);
+        $registerInfo = RegisterUserInfo::create("test", "hi@example.com", "Abc12345");
+
+        // Given a user is already registered
+        $user = self::$container->get('CS450\Model\User');
+        $user->register($registerInfo);
+        
+        // When user tries to register using the same username and password
+        // that they previously registered with
+        $registerInfo2 = RegisterUserInfo::create("test", "hi@example.com", "ANewPwd");
+
+        $this->expectException(\Exception::class);
+        $jwt = $user->register($registerInfo2);
     }
 }
