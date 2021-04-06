@@ -38,10 +38,14 @@ class AuthController
         } catch (\InvalidArgumentException $e) {
             throw new Exception($e);
         }
+        try {
+            $payload = array(
+                'token' => $this->user->register($userInfo),
+            );
+        } catch (\Exception $e) {
+            throw new Exception($e);
+        }
         
-        $payload = array(
-            'token' => $this->user->register($userInfo),
-        );
 
         return $payload;
     }
