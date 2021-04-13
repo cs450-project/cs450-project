@@ -3,7 +3,6 @@
     "description": "Backend for ODU CS450 databases term project (Group 1, Option B)",
     "type": "project",
     "license": "MIT",
-    "vendor-dir": "api/vendor",
     "autoload": {
         "psr-4": {
             "CS450\\": "api/src/CS450"
@@ -27,6 +26,11 @@
             "email": "jfarr001@odu.edu"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
     "require": {
         "adhocore/jwt": "^1.1",
         "monolog/monolog": "^2.2",
