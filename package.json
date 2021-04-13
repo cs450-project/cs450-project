@@ -1,6 +1,12 @@
 {
+    "name": "CS450-Group1",
+    "description": "ODU Spring 2021 CS550 group project",
+    "version": "0.0.1",
     "scripts": {
         "postinstall": "cd frontend && npm install",
         "build": "npm run --prefix frontend build -- --dest ../public && ln -s $(pwd)/api/web $(pwd)/public/api"
-    }
+    },
+    "engines": {
+     "node": "14.x"
+  }
 }
