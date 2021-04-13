@@ -1,5 +1,6 @@
 {
     "scripts": {
+        "postinstall": "cd frontend && npm install",
         "build": "npm run --prefix frontend build -- --dest ../public && ln -s $(pwd)/api/web $(pwd)/public/api"
     }
 }
