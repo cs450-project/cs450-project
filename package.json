@@ -3,7 +3,7 @@
     "description": "ODU Spring 2021 CS550 group project",
     "version": "0.0.1",
     "scripts": {
-        "postinstall": "cd frontend && npm install",
+        "postinstall": "cd frontend && npm install && ./vendor/bin/phinx migrate",
         "build": "npm run --prefix frontend build -- --dest ../public && cp -a api/api public/api && cp -a api/app public/app && cp -a api/src public/src" 
     },
     "engines": {
