@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57fb7df1fe8952b84ce4ebc8b2de067c",
+    "content-hash": "f567969e5616962edc9c692b79583d1f",
     "packages": [
         {
             "name": "adhocore/jwt",
@@ -2893,9 +2893,7 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "ext-mysqli": "*"
-    },
+    "platform": [],
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
