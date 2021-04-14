@@ -30,7 +30,7 @@ services:
     image: composer:latest
     command: ["composer", "install"]
     volumes:
-      - ./:/app
+      - ./api:/app
 
   frontend:
     profiles: ["frontend"]
