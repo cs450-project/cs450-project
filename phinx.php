@@ -1,7 +1,18 @@
 <?php
 
 $cleardb_uri = getenv("CLEARDB_DATABASE_URL");
-$cleardb_conn_params = parse_url($cleardb_uri);
+
+$cleardb_conn_params = (function() {
+    $cleardb_url = getenv("CLEARDB_DATABASE_URL");
+    $cleardb_conn_params = parse_url($cleardb_url);
+
+    return array(
+        "host" => !empty($cleardb_url) ? $cleardb_conn_params["host"] : '',
+        "user" => !empty($cleardb_url) ? $cleardb_conn_params["user"] : '',
+        "pass" => !empty($cleardb_url) ? $cleardb_conn_params["pass"] : '',
+        "name" => !empty($cleardb_url) ? substr($cleardb_conn_params["path"], 1) : '',
+    );
+})();
 
 return
 [
@@ -11,7 +22,7 @@ return
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
-        'default_environment' => getenv('ON_HEROKU') ? 'staging' : 'development',
+        'default_environment' => getenv('ON_HEROKU') === 1 ? 'staging' : 'development',
         'production' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
@@ -24,7 +35,7 @@ return
         'staging' => [
             'adapter' => 'mysql',
             'host' => $cleardb_conn_params['host'],
-            'name' => substr($cleardb_conn_params['path'], 1),
+            'name' => $cleardb_conn_params['name'],
             'user' => $cleardb_conn_params['user'],
             'pass' => $cleardb_conn_params['pass'],
             'port' => '3306',
