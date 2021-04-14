@@ -6,7 +6,7 @@ services:
     ports:
       - "8888:80"
     volumes:
-      - ./api:/var/www/html/
+      - ./:/var/www/
       - ./apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
     env_file:
       - dev.env
@@ -30,7 +30,7 @@ services:
     image: composer:latest
     command: ["composer", "install"]
     volumes:
-      - ./api:/app
+      - ./:/app
 
   frontend:
     profiles: ["frontend"]
