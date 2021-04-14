@@ -151,7 +151,7 @@ export default Vue.extend({
     },
     async loadDepartments() {
       const { data } = await axios.get('/departments');
-      this.options = data.map(dept => {
+      this.options = data.map((dept: { id: any; name: any; }) => {
         return {
           value: dept.id,
           text: dept.name
