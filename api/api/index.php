@@ -6,7 +6,6 @@ use CS450\Lib\Exception;
 use FastRoute\RouteCollector;
 
 $container = require __DIR__ . '/../app/bootstrap.php';
-
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/api/', 'CS450\Controller\HomeController');
     $r->addRoute('POST', '/api/register', ['CS450\Controller\AuthController', 'register']);
