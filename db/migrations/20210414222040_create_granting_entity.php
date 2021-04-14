@@ -18,7 +18,7 @@ final class CreateGrantingEntity extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/006_create_granting_entity.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/006_create_grants_entity.sql');
         $this->execute($sql);
     }
 

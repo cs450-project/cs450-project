@@ -11,7 +11,7 @@ return
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
-        'default_environment' => 'staging',
+        'default_environment' => getenv('ON_HEROKU') ? 'staging' : 'development',
         'production' => [
             'adapter' => 'mysql',
             'host' => 'localhost',
