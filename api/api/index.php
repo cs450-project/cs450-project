@@ -9,6 +9,7 @@ $container = require __DIR__ . '/../app/bootstrap.php';
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/api/', 'CS450\Controller\HomeController');
     $r->addRoute('POST', '/api/register', ['CS450\Controller\AuthController', 'register']);
+    $r->addRoute('GET', '/api/departments', 'CS450\Controller\DepartmentController');
 });
 
 $request = new Request();

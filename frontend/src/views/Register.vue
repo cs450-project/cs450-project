@@ -62,6 +62,11 @@
           Passwords must match
         </b-form-invalid-feedback>
       </b-form-group>
+
+    <b-form-group label="Enter your department:" label-for="department">
+        <b-form-select v-model="form.department" :options="options"></b-form-select>
+      </b-form-group>
+
       <div class="ml-auto">
         <b-button type="submit" variant="primary">Submit</b-button>
       </div>
@@ -95,11 +100,13 @@ export default Vue.extend({
         email: "",
         name: "",
         password: "",
+        department: ""
       },
       verify: {
         password: "",
       },
       registrationRejectedMsg: "",
+      options: []
     };
   },
   computed: {
@@ -129,7 +136,7 @@ export default Vue.extend({
       this.registrationRejectedMsg = "";
 
       axios
-        .post<RegistrationResponse>("/register", this.form)
+        .post<RegistrationResponse>("/api/register", this.form)
         .then(({ data }) => {
           const { token } = data;
           store.commit("setToken", token);
@@ -142,7 +149,19 @@ export default Vue.extend({
           );
         });
     },
+    async loadDepartments() {
+      const { data } = await axios.get('/api/departments');
+      this.options = data.map((dept: { id: any; name: any; }) => {
+        return {
+          value: dept.id,
+          text: dept.name
+        }
+      });
+    },
   },
+  mounted() {
+    this.loadDepartments();
+  }
 });
 </script>
 
