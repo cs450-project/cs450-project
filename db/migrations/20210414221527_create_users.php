@@ -18,7 +18,7 @@ final class CreateUsers extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/002_create_users.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/003_create_users.sql');
         $this->execute($sql);
     }
 

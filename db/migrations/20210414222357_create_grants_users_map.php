@@ -18,7 +18,7 @@ final class CreateGrantsUsersMap extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/002_create_map_grant_users.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/008_create_map_grant_users.sql');
         $this->execute($sql);
     }
 

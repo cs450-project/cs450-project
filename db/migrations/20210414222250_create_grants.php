@@ -18,7 +18,7 @@ final class CreateGrants extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/002_create_grants.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/007_create_grants.sql');
         $this->execute($sql);
     }
 

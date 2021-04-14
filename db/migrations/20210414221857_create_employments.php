@@ -18,7 +18,7 @@ final class CreateEmployments extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/002_create_employment.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/005_create_employment.sql');
         $this->execute($sql);
     }
 

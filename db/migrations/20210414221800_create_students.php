@@ -18,7 +18,7 @@ final class CreateStudents extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/002_create_students.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/004_create_students.sql');
         $this->execute($sql);
     }
 

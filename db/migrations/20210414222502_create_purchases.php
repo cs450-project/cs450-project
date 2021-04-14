@@ -18,7 +18,7 @@ final class CreatePurchases extends AbstractMigration
      */
     public function up(): void
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/002_create_purchases.sql');
+        $sql = file_get_contents(__DIR__ . '/../sql/009_create_purchases.sql');
         $this->execute($sql);
     }
 
