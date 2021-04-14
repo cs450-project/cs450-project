@@ -8,12 +8,44 @@
 ################################################################################
 # script and sql calls
 ################################################################################
+echo $2
+if [ -z ${2+x} ]; then
+    DATABASE_URL=$1
+    # extract the protocol
+    proto="`echo $DATABASE_URL | grep '://' | sed -e's,^\(.*://\).*,\1,g'`"
+    # remove the protocol
+    url=`echo $DATABASE_URL | sed -e s,$proto,,g`
 
-DB_HOST=$1
-DB_USER=$2
-DB_PASSWORD=$3
-DB_NAME=$4
+    # extract the user and password (if any)
+    userpass="`echo $url | grep @ | cut -d@ -f1`"
+    pass=`echo $userpass | grep : | cut -d: -f2`
+    if [ -n "$pass" ]; then
+        user=`echo $userpass | grep : | cut -d: -f1`
+    else
+        user=$userpass
+    fi
 
+    # extract the host -- updated
+    hostport=`echo $url | sed -e s,$userpass@,,g | cut -d/ -f1`
+    port=`echo $hostport | grep : | cut -d: -f2`
+    if [ -n "$port" ]; then
+        host=`echo $hostport | grep : | cut -d: -f1`
+    else
+        host=$hostport
+    fi
+
+    # extract the path (if any)
+    path="`echo $url | grep / | cut -d/ -f2- |cut -d? -f1`"
+    DB_HOST=$host
+    DB_USER=$user
+    DB_PASSWORD=$pass
+    DB_NAME=$path
+else
+    DB_HOST=$1
+    DB_USER=$2
+    DB_PASSWORD=$3
+    DB_NAME=$4
+fi
 if [[ -z $REMOTE_HOST ]]; then
 	SSH_PREFIX=""
 	SSH_SUFFIX=""
@@ -24,6 +56,7 @@ fi
 
 MYSQL_CLIENT="mysql --protocol=tcp -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} --database=${DB_NAME}"
 
+exit 0;
 #checking mysql connection
 mysql_db_statuscheck(){
 	echo "`date` :Checking DB connectivity...";
