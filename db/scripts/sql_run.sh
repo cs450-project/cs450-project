@@ -56,7 +56,6 @@ fi
 
 MYSQL_CLIENT="mysql --protocol=tcp -h ${DB_HOST} -u ${DB_USER} --password=${DB_PASSWORD} --database=${DB_NAME}"
 
-exit 0;
 #checking mysql connection
 mysql_db_statuscheck(){
 	echo "`date` :Checking DB connectivity...";
