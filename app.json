@@ -9,7 +9,15 @@
     ],
     "environments": {
         "review": {
-            "addons":["cleardb:ignite"]
+            "addons":["cleardb:ignite"],
+            "buildpacks": [
+                {
+                    "url": "heroku/nodejs"
+                },
+                {
+                    "url": "heroku/php"
+                }
+            ]
         }
     }
 }
