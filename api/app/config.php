@@ -13,10 +13,7 @@ use CS450\Service\DbService;
 
 return array_merge(
     (function() {
-        $cleardb_url = current(array_filter(getenv(), function($key) {
-            return preg_match('/^CLEARDB_[A-Z]+_URL$/', $key) === 1 ;
-        }, ARRAY_FILTER_USE_KEY));
-
+        $cleardb_url = getenv("CLEARDB_DATABASE_URL");
         $cleardb_conn_params = parse_url($cleardb_url);
 
         return array(
