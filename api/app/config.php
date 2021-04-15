@@ -13,17 +13,14 @@ use CS450\Service\DbService;
 
 return array_merge(
     (function() {
-        $cleardb_url = current(array_filter(getenv(), function($key) {
-            return preg_match('/^CLEARDB_[A-Z]+_URL$/', $key) === 1 ;
-        }, ARRAY_FILTER_USE_KEY));
-
-        $cleardb_conn_params = parse_url($cleardb_url);
+        $cleardb_uri = getenv("CLEARDB_DATABASE_URL");
+        $cleardb_conn_params = parse_url($cleardb_uri)l
 
         return array(
-            "db.host" => !empty($cleardb_url) ? $cleardb_conn_params["host"] : getenv("MYSQL_HOST"),
-            "db.user" => !empty($cleardb_url) ? $cleardb_conn_params["user"] : getenv("MYSQL_USER"),
-            "db.password" => !empty($cleardb_url) ? $cleardb_conn_params["pass"] : getenv("MYSQL_PASSWORD"),
-            "db.name" => !empty($cleardb_url) ? substr($cleardb_conn_params["path"], 1) : getenv("MYSQL_DATABASE"),
+            "db.host" => !empty($cleardb_uri) ? $cleardb_conn_params["host"] : getenv("MYSQL_HOST"),
+            "db.user" => !empty($cleardb_uri) ? $cleardb_conn_params["user"] : getenv("MYSQL_USER"),
+            "db.password" => !empty($cleardb_uri) ? $cleardb_conn_params["pass"] : getenv("MYSQL_PASSWORD"),
+            "db.name" => !empty($cleardb_uri) ? substr($cleardb_conn_params["path"], 1) : getenv("MYSQL_DATABASE"),
         );
     })(),
     [

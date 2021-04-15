@@ -1,17 +1,14 @@
 <?php
 
+$cleardb_uri = getenv("CLEARDB_DATABASE_URL");
 $cleardb_conn_params = (function() {
-    var_dump(getenv());
-    $cleardb_url = current(array_filter(getenv(), function($key) {
-        return preg_match('/^CLEARDB_[A-Z]+_URL$/', $key) === 1 ;
-    }, ARRAY_FILTER_USE_KEY));
-    $cleardb_conn_params = parse_url($cleardb_url);
+    $cleardb_conn_params = parse_url($cleardb_uri);
 
     return array(
-        "host" => !empty($cleardb_url) ? $cleardb_conn_params["host"] : '',
-        "user" => !empty($cleardb_url) ? $cleardb_conn_params["user"] : '',
-        "pass" => !empty($cleardb_url) ? $cleardb_conn_params["pass"] : '',
-        "name" => !empty($cleardb_url) ? substr($cleardb_conn_params["path"], 1) : '',
+        "host" => !empty($cleardb_uri) ? $cleardb_conn_params["host"] : '',
+        "user" => !empty($cleardb_uri) ? $cleardb_conn_params["user"] : '',
+        "pass" => !empty($cleardb_uri) ? $cleardb_conn_params["pass"] : '',
+        "name" => !empty($cleardb_uri) ? substr($cleardb_conn_params["path"], 1) : '',
     );
 })();
 
