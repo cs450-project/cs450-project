@@ -1,8 +1,7 @@
 <?php
 
-$cleardb_uri = getenv("CLEARDB_DATABASE_URL");
-
 $cleardb_conn_params = (function() {
+    var_dump(getenv());
     $cleardb_url = current(array_filter(getenv(), function($key) {
         return preg_match('/^CLEARDB_[A-Z]+_URL$/', $key) === 1 ;
     }, ARRAY_FILTER_USE_KEY));
