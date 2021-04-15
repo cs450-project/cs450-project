@@ -44,8 +44,5 @@
         "phpunit/phpunit": "^9",
         "phpunit/php-code-coverage": "^9.2",
         "heroku/heroku-buildpack-php": "*"
-    },
-    "scripts": {
-        "post-install-cmd": "phinx migrate"
     }
 }
