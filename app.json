@@ -1,9 +1,10 @@
 {
-    "name": "CS450 Group 1 project",
+    "name": "s2021-cs550-g1",
     "description": "Grant management project",
     "repository": "https://github.com/cs450-project/cs450-project",
     "env": {
-        "ON_HEROKU": "1"
+        "ON_HEROKU": "1",
+        "NPM_CONFIG_PRODUCTION": false
     },
     "addons": ["cleardb:ignite"],
     "buildpacks": [
