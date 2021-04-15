@@ -19,36 +19,6 @@ jobs:
       - name: Test
         run: npm run test:unit
 
-  verify_migrations:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./db
-    services:
-      mysql:
-        image: mysql:8.0.23
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.DB_NAME }}
-          MYSQL_ROOT_HOST: "%"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Verify MySql connection
-        env:
-          PORT: ${{ job.services.mysql.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
-      - name: Push ssh key into temp file
-        run: |
-          echo "${{ secrets.DEPLOY_KEY }}" > sshkey
-          chmod 600 sshkey
-      - name: Run migration on server
-        run: ./scripts/sql_run.sh localhost root ${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }}
-
   test_phinx_migrations:
     runs-on: ubuntu-latest
     steps:
