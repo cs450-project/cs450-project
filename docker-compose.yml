@@ -25,6 +25,17 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
 
+  mysql_for_tests:
+    image: mysql:8.0.23
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3307:3306"
+    env_file:
+      - dev.env
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+
   composer:
     image: composer:latest
     command: ["composer", "install"]

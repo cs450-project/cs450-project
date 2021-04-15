@@ -50,10 +50,10 @@ return
         ],
         'testing' => [
             'adapter' => 'mysql',
-            'host' => 'localhost',
-            'name' => 'testing_db',
-            'user' => 'root',
-            'pass' => '',
+            'host' => 'mysql_for_tests',
+            'name' => 'cs450',
+            'user' => 'cs450db_user',
+            'pass' => 'tomtit.TAD.inward',
             'port' => '3306',
             'charset' => 'utf8',
         ]
