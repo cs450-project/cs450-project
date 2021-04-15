@@ -4,7 +4,7 @@
     "repository": "https://github.com/cs450-project/cs450-project",
     "env": {
         "ON_HEROKU": "1",
-        "NPM_CONFIG_PRODUCTION": false
+        "NPM_CONFIG_PRODUCTION": "false"
     },
     "addons": ["cleardb:ignite"],
     "buildpacks": [
