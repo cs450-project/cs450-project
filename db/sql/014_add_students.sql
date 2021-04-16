@@ -1,4 +1,4 @@
-INSERT INTO tbl_fact_students (name, department_id, program)
+INSERT INTO `tbl_fact_students` (name, department_id, program)
 VALUES
     ('Albert Einstein', 5, 'UG'),
     ('Ada Lovelace', 2, 'PHD'),
