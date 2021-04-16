@@ -46,6 +46,9 @@
         "heroku/heroku-buildpack-php": "*"
     },
     "scripts": {
-        "post-install-cmd": "phinx migrate"
+        "post-install-cmd": [
+            "phinx migrate",
+            "phinx seed:run"
+        ]
     }
 }

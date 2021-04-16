@@ -1,8 +1,7 @@
 <?php
 
-include 'api/app/dbconfig.php';
+$db_config = (require 'api/app/config.php')['db'];
 
-$db_conn_params = load_db_config();
 return
 [
     'paths' => [
@@ -11,43 +10,16 @@ return
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
-        'default_environment' => getenv('ON_HEROKU') === "1" ? 'staging' : 'development',
-        'production' => [
-            'adapter' => 'mysql',
-            'host' => 'localhost',
-            'name' => 'production_db',
-            'user' => 'root',
-            'pass' => '',
-            'port' => '3306',
-            'charset' => 'utf8',
-        ],
-        'staging' => [
-            'adapter' => 'mysql',
-            'host' => $db_conn_params['host'],
-            'name' => $db_conn_params['name'],
-            'user' => $db_conn_params['user'],
-            'pass' => $db_conn_params['pass'],
-            'port' => '3306',
-            'charset' => 'utf8',
-        ],
-        'development' => [
-            'adapter' => 'mysql',
-            'host' => 'mysql',
-            'name' => 'cs450',
-            'user' => 'cs450db_user',
-            'pass' => 'tomtit.TAD.inward',
-            'port' => '3306',
-            'charset' => 'utf8',
-        ],
-        'testing' => [
-            'adapter' => 'mysql',
-            'host' => 'mysql_for_tests',
-            'name' => 'cs450',
-            'user' => 'cs450db_user',
-            'pass' => 'tomtit.TAD.inward',
-            'port' => '3306',
-            'charset' => 'utf8',
-        ]
+        'default_environment' => getenv('PIPELINE_STAGE') ?? 'development',
+        'production' => $db_config,
+        'staging' => $db_config,
+        'development' => $db_config,
+        'testing' => array_combine(
+            array_keys($db_config),
+            array_map(function($k, $v) {
+                return $k == 'host' ? $v . '_for_tests' : $v;
+            }, array_keys($db_config), $db_config)
+        ),
     ],
     'version_order' => 'creation'
 ];

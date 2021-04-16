@@ -5,8 +5,8 @@
     "scripts": {
         "postinstall": "cd frontend && npm install",
         "build": "npm run --prefix frontend build -- --skip-plugins eslint --dest ../public && cp -a api/api public/api && cp -a api/app public/app && cp -a api/src public/src",
-        "migrate": "docker-compose exec -T web ../vendor/bin/phinx migrate -c ../phinx.php -e testing",
-        "migrate:dry": "npm run migrate -- --dry-run"
+        "test:migrate": "docker-compose exec -T web ../vendor/bin/phinx migrate -vvv -c ../phinx.php -e testing",
+        "test:migrate:dry": "npm run test:migrate -- --dry-run"
     },
     "engines": {
      "node": "14.x"

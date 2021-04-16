@@ -33,9 +33,9 @@ jobs:
       - name: Check running containers
         run: docker ps
       - name: Dry run migrations
-        run: npm run migrate:dry
+        run: npm run test:migrate:dry
       - name: Run migrations
-        run: npm run migrate
+        run: npm run test:migrate
 
   test_backend:
     runs-on: ubuntu-latest
