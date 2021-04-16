@@ -1,6 +1,6 @@
 <?
 
-include 'dbconfig.php';
+require_once 'dbconfig.php';
 
 use Psr\Container\ContainerInterface;
 use function DI\factory;
@@ -20,12 +20,18 @@ $db_conn_params = load_db_config(
     getenv("MYSQL_DATABASE"),
 );
 
+$db_config = array_merge(
+    $db_conn_params,
+    array(
+        'adapter' => 'mysql',
+        'charset' => 'utf8',
+        'port' => '3306',
+    )
+);
+
 return [
-    "env" => "dev",
-    "db.host" => $db_conn_params["host"],
-    "db.user" => $db_conn_params["user"],
-    "db.name" => $db_conn_params["name"],
-    "db.password" => $db_conn_params["pass"],
+    "env" => "development",
+    "db" => $db_config,
     "jwt.key" => "5f2b5cdbe5194f10b3241568fe4e2b24",
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => create(CS450\Service\Jwt\FirebaseJwt::class),
