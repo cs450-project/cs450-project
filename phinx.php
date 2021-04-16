@@ -10,7 +10,7 @@ return
     ],
     'environments' => [
         'default_migration_table' => 'phinxlog',
-        'default_environment' => getenv('PIPELINE_STAGE') ?? 'development',
+        'default_environment' => empty(getenv('PIPELINE_STAGE')) ? ? 'development' : getenv('PIPELINE_STAGE'),
         'production' => $db_config,
         'staging' => $db_config,
         'development' => $db_config,
