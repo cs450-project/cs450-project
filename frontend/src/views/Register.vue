@@ -136,7 +136,7 @@ export default Vue.extend({
       this.registrationRejectedMsg = "";
 
       axios
-        .post<RegistrationResponse>("/register", this.form)
+        .post<RegistrationResponse>("/api/register", this.form)
         .then(({ data }) => {
           const { token } = data;
           store.commit("setToken", token);
@@ -150,8 +150,8 @@ export default Vue.extend({
         });
     },
     async loadDepartments() {
-      const { data } = await axios.get('/departments');
-      this.options = data.map(dept => {
+      const { data } = await axios.get('/api/departments');
+      this.options = data.map((dept: { id: any; name: any; }) => {
         return {
           value: dept.id,
           text: dept.name
