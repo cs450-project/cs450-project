@@ -1,16 +1,8 @@
 <?php
 
-$cleardb_conn_params = (function() {
-    $cleardb_url = getenv("CLEARDB_DATABASE_URL");
-    $cleardb_conn_params = parse_url($cleardb_url);
+include 'api/app/dbconfig.php';
 
-    return array(
-        "host" => !empty($cleardb_url) ? $cleardb_conn_params["host"] : '',
-        "user" => !empty($cleardb_url) ? $cleardb_conn_params["user"] : '',
-        "pass" => !empty($cleardb_url) ? $cleardb_conn_params["pass"] : '',
-        "name" => !empty($cleardb_url) ? substr($cleardb_conn_params["path"], 1) : '',
-    );
-})();
+$db_conn_params = load_db_config();
 
 return
 [
@@ -32,10 +24,10 @@ return
         ],
         'staging' => [
             'adapter' => 'mysql',
-            'host' => $cleardb_conn_params['host'],
-            'name' => $cleardb_conn_params['name'],
-            'user' => $cleardb_conn_params['user'],
-            'pass' => $cleardb_conn_params['pass'],
+            'host' => $conn_params['host'],
+            'name' => $conn_params['name'],
+            'user' => $conn_params['user'],
+            'pass' => $conn_params['pass'],
             'port' => '3306',
             'charset' => 'utf8',
         ],
