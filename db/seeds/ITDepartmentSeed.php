@@ -15,7 +15,7 @@ class ITDepartmentSeed extends AbstractSeed
      */
     public function run()
     {
-        $sql = file_get_contents(__DIR__ . '/../sql/011_add_it_department');
+        $sql = file_get_contents(__DIR__ . '/../sql/011_add_it_department.sql');
         $this->execute($sql);
     }
 }
