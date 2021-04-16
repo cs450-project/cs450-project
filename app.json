@@ -3,7 +3,10 @@
     "description": "Grant management project",
     "repository": "https://github.com/cs450-project/cs450-project",
     "env": {
-        "PIPELINE_STAGE": "staging",
+        "PIPELINE_STAGE": {
+            "description": "current pipeline stage",
+            "value": "staging"
+        },
         "NPM_CONFIG_PRODUCTION": "false"
     },
     "addons": ["cleardb:ignite"],
@@ -27,7 +30,10 @@
                 }
             ],
             "env": {
-                "PIPELINE_STAGE": "development"
+                "PIPELINE_STAGE": {
+                    "description": "current pipeline stage",
+                    "value": "development"
+                }
             }
         }
     }
