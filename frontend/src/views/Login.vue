@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-form @submit.prevent="onSubmit">
     <b-form-group
       label="Email address:"
       label-for="email"
@@ -23,11 +23,16 @@
         required
       />
     </b-form-group>
-  </div>
+
+    <div>
+      <b-button type="submit" variant="primary">Submit</b-button>
+    </div>
+  </b-form>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
+import { mapActions } from "vuex";
 
 export default Vue.extend({
   name: "Login",
@@ -39,5 +44,17 @@ export default Vue.extend({
       },
     };
   },
+  methods: {
+    ...mapActions(["login"]),
+    onSubmit(): void {
+      this.login(this.form)
+      .then(() => {
+        //this.$router.replace("/about");
+      })
+      .catch((errCode: number) => {
+        this.form.password = "";
+      });
+    }
+  }
 });
 </script>

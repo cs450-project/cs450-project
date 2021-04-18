@@ -1,6 +1,6 @@
 <template>
   <div :class="{ shake: registrationRejected }">
-    <b-form @submit="onSubmit">
+    <b-form @submit.prevent="onSubmit">
       <b-form-group label="Your Name:" label-for="name">
         <b-form-input
           id="name"
@@ -61,7 +61,7 @@
       </b-form-group>
 
       <b-form-group label="Enter your department:" label-for="department">
-        <b-form-select v-model="form.department" :options="options" />
+        <b-form-select v-model="form.department" :options="departmentOptions" />
       </b-form-group>
 
       <div class="ml-auto">
@@ -74,12 +74,11 @@
 <script lang="ts">
 import Vue from "vue";
 import axios from "axios";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 import store from "@/store";
 import Borat from "@/components/BoratValidated.vue";
-
-interface RegistrationResponse {
-  token: string;
-}
+import { AuthResponse } from "@/api/defintions";
 
 export default Vue.extend({
   name: "Register",
@@ -101,11 +100,10 @@ export default Vue.extend({
       verify: {
         password: "",
       },
-      registrationRejectedMsg: "",
-      options: [],
     };
   },
   computed: {
+    ...mapGetters(["errorMsg", "departmentOptions"]),
     pwRequirements(): boolean {
       return this.isLongEnough && this.has1Capital;
     },
@@ -119,53 +117,33 @@ export default Vue.extend({
       return this.form.password === this.verify.password;
     },
     registrationRejected(): boolean {
-      return this.registrationRejectedMsg !== "";
+      return this.errorMsg && this.errorMsg !== "";
     },
   },
   methods: {
-    onSubmit(event: Event): void {
-      event.preventDefault();
-
+    ...mapMutations(["setToken", "setError"]),
+    ...mapActions(['register', 'fetchDepartments']),
+    onSubmit(): void {
       if (!(this.passwordsMatch && this.pwRequirements)) {
         return;
       }
 
-      this.registrationRejectedMsg = "";
+      this.register(this.form)
+      .then(() => {
+        //this.$router.replace("/about");
+      })
+      .catch((errCode: number ) => {
+        this.form.password = "";
+        this.verify.password = "";
 
-      axios
-        .post<RegistrationResponse>("/api/register", this.form)
-        .then(({ data }) => {
-          const { token } = data;
-          store.commit("setToken", token);
-          this.$router.replace("/about");
-        })
-        .catch((error) => {
-          this.form.password = "";
-          this.verify.password = "";
-
-          const { message: errMsg, code: errCode } = error.response?.data;
-          this.$store.commit(
-            "setError",
-            errMsg ?? "Something unexpected happened 😵"
-          );
-
-          if (errCode === 69) {
+        if (errCode === 69) {
             this.$router.replace(`/login/${this.form.email}`);
           }
-        });
-    },
-    async loadDepartments() {
-      const { data } = await axios.get("/api/departments");
-      this.options = data.map((dept: { id: number; name: string }) => {
-        return {
-          value: dept.id,
-          text: dept.name,
-        };
       });
     },
   },
   mounted() {
-    this.loadDepartments();
+    this.fetchDepartments();
   },
 });
 </script>
