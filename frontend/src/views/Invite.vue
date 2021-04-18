@@ -63,7 +63,9 @@ export default Vue.extend({
   methods: {
     ...mapActions(["fetchDepartments", "sendInvite"]),
     onSubmit() {
-      this.sendInvite(this.form).then(() => (this.emailSent = true));
+      this.sendInvite(this.form)
+        .then(() => (this.emailSent = true))
+        .catch(() => (this.emailSent = false));
     },
   },
 });

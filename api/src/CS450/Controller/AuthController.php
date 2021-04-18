@@ -6,6 +6,7 @@ use CS450\Model\User;
 use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
 use CS450\Lib\Exception;
+use CS450\Lib\EmailAddress;
 
 /**
  * @codeCoverageIgnore
@@ -13,17 +14,33 @@ use CS450\Lib\Exception;
 class AuthController
 {
     /**
+     * @Inject("env")
+     */
+    private $env;
+
+    /**
      * @Inject
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     /**
-     * 
      * @Inject
      * @var CS450\Model\User
      */
     private $user;
+
+    /**
+     * @Inject
+     * @var CS450\Service\JwtService
+     */
+    private $jwt;
+
+    /**
+     * @Inject
+     * @var CS450\Service\EmailService
+     */
+    private $email;
 
     public function login($params)
     {
@@ -67,5 +84,60 @@ class AuthController
         
 
         return $payload;
+    }
+
+    private static function hostname(){
+        return sprintf(
+          "%s://%s",
+          isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+          $_SERVER['SERVER_NAME'],
+        );
+      }
+
+    public function sendInvite($params) {
+        if (empty($params["token"]) || $params["token"]["role"] !== "ADMINISTRATOR") {
+            throw new \Exception("You are not authorized to invite new faculty. Please talk to your administrator");
+        }
+
+        $senderUid = $params["token"]["uid"];
+
+        $to = "";
+        $this->logger->info("Using env: " . $env);
+
+        if (empty($env) || $env === "development") {
+            switch ($senderUid) {
+                case "1":
+                    $to = "alaun001@odu.edu";
+                    break;
+                case "2":
+                    $to = "jfarr001@odu.edu";
+                    break;
+                case "3":
+                    $to = "jrich069@odu.edu";
+                    break;
+                case "4":
+                    $to = "stasg001@odu.edu";
+                    break;
+            }
+        } else {
+            $to = $params["post"]["email"];
+        }
+
+        $this->email->sendFromTemplate(
+            EmailAddress::fromString($to),
+            "Welcome! Register with grant management",
+            "registration_invitation",
+            array(
+                "department"  => "IT",
+                "startup_amt" => "UNIMPLEMENTED",
+                "admin_email" => "YEAH STILL GOTTA DODIS",
+                "registration_url" => sprintf("%s/#/register/%s/%s/%d",
+                    self::hostname(),
+                    urlencode($params["post"]["email"]),
+                    urlencode($params["post"]["name"]),
+                    urlencode($params["post"]["department"]),
+                ),
+            ),
+        );
     }
 }
