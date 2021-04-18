@@ -122,7 +122,7 @@ export default Vue.extend({
   },
   methods: {
     ...mapMutations(["setToken", "setError"]),
-    ...mapActions(['register', 'fetchDepartments']),
+    ...mapActions(["register", "fetchDepartments"]),
     onSubmit(): void {
       if (!(this.passwordsMatch && this.pwRequirements)) {
         return;
@@ -142,7 +142,7 @@ export default Vue.extend({
       });
     },
   },
-  mounted() {
+  created() {
     this.fetchDepartments();
   },
 });
