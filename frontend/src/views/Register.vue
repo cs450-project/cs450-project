@@ -73,12 +73,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import axios from "axios";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 
-import store from "@/store";
 import Borat from "@/components/BoratValidated.vue";
-import { AuthResponse } from "@/api/defintions";
 
 export default Vue.extend({
   name: "Register",
@@ -129,17 +126,17 @@ export default Vue.extend({
       }
 
       this.register(this.form)
-      .then(() => {
-        //this.$router.replace("/about");
-      })
-      .catch((errCode: number ) => {
-        this.form.password = "";
-        this.verify.password = "";
+        .then(() => {
+          //this.$router.replace("/about");
+        })
+        .catch((errCode: number) => {
+          this.form.password = "";
+          this.verify.password = "";
 
-        if (errCode === 69) {
+          if (errCode === 69) {
             this.$router.replace(`/login/${this.form.email}`);
           }
-      });
+        });
     },
   },
   created() {

@@ -48,13 +48,13 @@ export default Vue.extend({
     ...mapActions(["login"]),
     onSubmit(): void {
       this.login(this.form)
-      .then(() => {
-        //this.$router.replace("/about");
-      })
-      .catch((errCode: number) => {
-        this.form.password = "";
-      });
-    }
-  }
+        .then(() => {
+          //this.$router.replace("/about");
+        })
+        .catch(() => {
+          this.form.password = "";
+        });
+    },
+  },
 });
 </script>
