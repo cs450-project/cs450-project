@@ -50,7 +50,7 @@ export default Vue.extend({
     onSubmit(): void {
       this.login(this.form)
         .then(() => {
-          axios.get("/");
+          axios.get("/api/", { withCredentials: true });
           //this.$router.replace("/about");
         })
         .catch(() => {
