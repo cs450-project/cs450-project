@@ -9,9 +9,10 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
+    path: "/register/:prefillEmail*/:prefillName*/:prefillDept*",
     name: "Register",
     component: Register,
+    props: true,
   },
   {
     path: "/login/:prefillEmail*",
