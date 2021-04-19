@@ -105,7 +105,6 @@ class AuthController
             throw new \Exception("You are not authorized to invite new faculty. Please talk to your administrator");
         }
 
-        $startupAmt = null;
         $senderUid = $params["token"]["uid"];
         $adminEmail = $this->db->getConnection()
             ->query("SELECT email FROM tbl_fact_users WHERE ID = $senderUid")
@@ -120,7 +119,7 @@ class AuthController
             "registration_invitation",
             array(
                 "department"  => "IT",
-                "startup_amt" => $startupAmt ?? null,
+                "startup_amt" => $params["post"]["startupAmount"],
                 "admin_email" => $adminEmail,
                 "registration_url" => sprintf("%s/#/register/%s",
                     self::hostname(),

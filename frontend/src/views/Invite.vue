@@ -28,7 +28,12 @@
       </b-form-group>
 
       <b-form-group label="Enter faculty's department:" label-for="department">
-        <b-form-select v-model="form.department" :options="departmentOptions" />
+        <b-form-select id="department" v-model="form.department" :options="departmentOptions" />
+      </b-form-group>
+
+      <b-form-group label="Startup fund amount:" label-for="startup-fund">
+        <b-form-input id="range-1" v-model="form.startupAmount" type="range" min="50000" max="80000" step="0.1"></b-form-input>
+        <div class="mt-2">Value: {{ form.startupAmount }} thousand</div>
       </b-form-group>
 
       <div class="ml-auto">
@@ -50,6 +55,7 @@ export default Vue.extend({
         name: "",
         email: "",
         department: "",
+        startupAmount: 50.0,
       },
       emailSent: false,
     };
