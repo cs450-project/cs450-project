@@ -42,6 +42,12 @@ class AuthController
      */
     private $email;
 
+    /**
+     * @Inject
+     * @var CS450\Service\DbService
+     */
+    private $db;
+
     public function login($params)
     {
         $loginData = $params["post"];
@@ -99,29 +105,14 @@ class AuthController
             throw new \Exception("You are not authorized to invite new faculty. Please talk to your administrator");
         }
 
+        $startupAmt = null;
         $senderUid = $params["token"]["uid"];
+        $adminEmail = $this->db->getConnection()
+            ->query("SELECT email FROM tbl_fact_users WHERE ID = $senderUid")
+            ->fetch_object()
+            ->email;
 
-        $to = "";
-        $this->logger->info("Using env: " . $env);
-
-        if (empty($env) || $env === "development") {
-            switch ($senderUid) {
-                case "1":
-                    $to = "alaun001@odu.edu";
-                    break;
-                case "2":
-                    $to = "jfarr001@odu.edu";
-                    break;
-                case "3":
-                    $to = "jrich069@odu.edu";
-                    break;
-                case "4":
-                    $to = "stasg001@odu.edu";
-                    break;
-            }
-        } else {
-            $to = $params["post"]["email"];
-        }
+        $to = $params["post"]["email"];
 
         $this->email->sendFromTemplate(
             EmailAddress::fromString($to),
@@ -129,8 +120,8 @@ class AuthController
             "registration_invitation",
             array(
                 "department"  => "IT",
-                "startup_amt" => "UNIMPLEMENTED",
-                "admin_email" => "YEAH STILL GOTTA DODIS",
+                "startup_amt" => $startupAmt ?? null,
+                "admin_email" => $adminEmail,
                 "registration_url" => sprintf("%s/#/register/%s",
                     self::hostname(),
                     urlencode(base64_encode(json_encode(array(
