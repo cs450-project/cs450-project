@@ -1,6 +1,7 @@
-<?
+<?php
+require_once __DIR__ . '/dbconfig.php';
 
-require_once 'dbconfig.php';
+use Appconfig\load_db_config;
 
 use Psr\Container\ContainerInterface;
 use function DI\factory;
@@ -13,7 +14,7 @@ use CS450\Service\DbService;
 use CS450\Service\JwtService;
 use CS450\Service\EmailService;
 
-$db_conn_params = load_db_config(
+$db_conn_params = Appconfig\load_db_config(
     getenv("MYSQL_HOST"),
     getenv("MYSQL_USER"),
     getenv("MYSQL_PASSWORD"),
