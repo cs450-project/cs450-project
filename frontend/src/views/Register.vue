@@ -81,6 +81,7 @@ type PrefillData = {
   name: string;
   email: string;
   department: number;
+  startupToken: string;
 };
 
 export default Vue.extend({
@@ -100,6 +101,7 @@ export default Vue.extend({
         name: this.prefillData?.name ?? "",
         password: "",
         department: this.prefillData?.department ?? 1,
+        startupToken: this.prefillData?.startupToken,
       },
       verify: {
         password: "",
