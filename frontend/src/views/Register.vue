@@ -21,6 +21,7 @@
           type="email"
           placeholder="Enter email"
           required
+          disabled
         ></b-form-input>
       </b-form-group>
 
@@ -81,7 +82,7 @@ type PrefillData = {
   name: string;
   email: string;
   department: number;
-  startupToken: string;
+  userDataToken: string;
 };
 
 export default Vue.extend({
@@ -101,7 +102,7 @@ export default Vue.extend({
         name: this.prefillData?.name ?? "",
         password: "",
         department: this.prefillData?.department ?? 1,
-        startupToken: this.prefillData?.startupToken,
+        userDataToken: this.prefillData?.userDataToken,
       },
       verify: {
         password: "",
@@ -150,6 +151,12 @@ export default Vue.extend({
   },
   created() {
     this.fetchDepartments();
+    if (!this.form.userDataToken) {
+      this.setError(
+        `Your invitation seems to have been damaged.
+        Verify the link you were sent, or contact your administrator`
+      );
+    }
   },
 });
 </script>
