@@ -9,13 +9,25 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/register/:prefillEmail*/:prefillName*/:prefillDept*",
+    path: "/register/:prefillData",
     name: "Register",
     component: Register,
-    props: true,
+    props: (route) => {
+      try {
+        const jsonStr = Buffer.from(
+          route.params.prefillData,
+          "base64"
+        ).toString("utf-8");
+        return { prefillData: JSON.parse(jsonStr) };
+      } catch (e) {
+        console.error(
+          `failed to parse base64 ${route.params?.prefillData} ${e}`
+        );
+      }
+    },
   },
   {
-    path: "/login/:prefillEmail*",
+    path: "/login/:prefillEmail?",
     name: "Login",
     component: Login,
     props: true,

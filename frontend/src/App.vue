@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import Header from "@/components/Header.vue";
-import MessageBox from '@/components/MessageBox.vue';
+import MessageBox from "@/components/MessageBox.vue";
 
 export default {
   name: "App",

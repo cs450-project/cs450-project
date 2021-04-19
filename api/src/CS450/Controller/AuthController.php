@@ -131,11 +131,13 @@ class AuthController
                 "department"  => "IT",
                 "startup_amt" => "UNIMPLEMENTED",
                 "admin_email" => "YEAH STILL GOTTA DODIS",
-                "registration_url" => sprintf("%s/#/register/%s/%s/%d",
+                "registration_url" => sprintf("%s/#/register/%s",
                     self::hostname(),
-                    urlencode($params["post"]["email"]),
-                    urlencode($params["post"]["name"]),
-                    urlencode($params["post"]["department"]),
+                    urlencode(base64_encode(json_encode(array(
+                        "email" => $params["post"]["email"],
+                        "name" => $params["post"]["name"],
+                        "department" => $params["post"]["department"],
+                    )))),
                 ),
             ),
         );

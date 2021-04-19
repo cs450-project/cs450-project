@@ -8,8 +8,5 @@
         "test:migrate": "docker-compose exec -T web ../vendor/bin/phinx migrate -c ../phinx.php -e testing",
         "test:migrate:dry": "npm run test:migrate -- --dry-run",
         "test:seed": "docker-compose exec -T web ../vendor/bin/phinx seed:run -c ../phinx.php -e testing"
-    },
-    "engines": {
-     "node": "14.x"
-  }
+    }
 }
