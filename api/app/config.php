@@ -40,10 +40,6 @@ return [
     "env" => empty(getenv("PIPELINE_STAGE")) ? "development" : getenv("PIPELINE_STAGE"),
     "db" => $db_config,
     "jwt" => $jwt_config,
-    UserBuilder::class => create()
-        ->constructor(DI\get(DbService::class)),
-    GrantBuilder::class => create()
-        ->constructor(DI\get(DbService::class)),
     DbService::class => DI\Autowire(CS450\Service\Db\MysqlDb::class),
     JwtService::class => DI\Autowire(CS450\Service\Jwt\FirebaseJwt::class),
     EmailService::class => DI\Autowire(CS450\Service\Email\MailgunEmail::class),

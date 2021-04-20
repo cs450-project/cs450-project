@@ -2,7 +2,6 @@
 
 namespace CS450\Model;
 
-use CS450\Model\GrantBuilder;
 use CS450\Service\DbService;
 
 final class Grant {
@@ -18,17 +17,8 @@ final class Grant {
     private $originalAmount;
     private $recipients = [];
 
-    public function __construct(GrantBuilder $builder, DbService $db) {
+    public function __construct(DbService $db) {
         $this->db = $db;
-
-        $this->id = $builder->id;
-        $this->status = $builder->status;
-        $this->adminId = $builder->adminId;
-        $this->sourceId = $builder->sourceId;
-        $this->grantNumber = $builder->grantNumber;
-        $this->originalAmount = $builder->originalAmount;
-        $this->balance = $this->balance ?? $this->originalAmount;
-        $this->recipients = (new \ArrayObject($builder->recipients))->getArrayCopy();
     }
 
     public function getId(): int {
@@ -57,6 +47,65 @@ final class Grant {
 
     public function getRecipients() {
         return $this->recipients;
+    }
+
+    function startupGrant() {
+        $oduSourceId = $this->db->getConnection()
+            ->query("SELECT id FROM tbl_fact_granting_entity WHERE name='ODU'")
+            ->fetch_object()
+            ->id;
+
+        $this->status = "APPROVED";
+        $this->title = "Starup Fund";
+        $this->sourceId = $oduSourceId;
+        $this->grantNumber = "ODU-STARTUP";
+
+        return $this;
+    }
+
+    function for(User $user): Self {
+        array_push($this->recipients, $user);
+        return $this;
+    }
+
+    function setId($id): Self {
+        $this->id = $id;
+        return $this;
+    }
+
+    function setTitle($title): Self {
+        $this->title = $title;
+        return $this;
+    }
+
+    function setGrantNumber($grantNumber): Self {
+        $this->grantNumber = $grantNumber;
+        return $this;
+    }
+
+    function setSourceId($sourceId): Self {
+        $this->sourceId = $sourceId;
+        return $this;
+    }
+
+    function setOriginalAmount($originalAmount): Self {
+        $this->originalAmount = $originalAmount;
+        return $this;
+    }
+
+    function setBalance($balance): Self {
+        $this->balance = $balance;
+        return $this;
+    }
+
+    function setStatus($status): Self {
+        $this->status = $status;
+        return $this;
+    }
+
+    function setAdminId($adminId): Self {
+        $this->adminId = $adminId;
+        return $this;
     }
 
     public function save(): Self {

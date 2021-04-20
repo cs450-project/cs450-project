@@ -2,9 +2,12 @@
 
 namespace CS450\Controller;
 
+use CS450\Model\User;
+use CS450\Model\Grant;
 use CS450\Model\UserFactory;
 use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
+
 use CS450\Lib\Exception;
 use CS450\Lib\EmailAddress;
 
@@ -26,12 +29,6 @@ final class AuthController
 
     /**
      * @Inject
-     * @var CS450\Model\UserFactory
-     */
-    private $userFactory;
-
-    /**
-     * @Inject
      * @var CS450\Service\JwtService
      */
     private $jwt;
@@ -50,15 +47,9 @@ final class AuthController
 
     /**
      * @Inject
-     * @var CS450\Model\UserBuilder
+     * @var CS450\Model\UserFactory
      */
-    private $userBuilder;
-
-    /**
-     * @Inject
-     * @var CS450\Model\GrantBuilder
-     */
-    private $grantBuilder;
+    private $userFactory;
 
     private function makeJwt($uid, $role): string {
         $payload = array(
@@ -127,22 +118,21 @@ final class AuthController
             }
 
             
-            $user = $this->userBuilder
-                ->name($userInfo->name)
-                ->email(strval($userInfo->email))
-                ->department($userInfo->department)
-                ->password(strval($userInfo->password))
-                ->role("FACULTY")
-                ->build()
+            $user = (new User($this->db))
+                ->setName($userInfo->name)
+                ->setEmail(strval($userInfo->email))
+                ->setDepartment($userInfo->department)
+                ->setPasswordHash(strval($userInfo->password))
+                ->setRole("FACULTY")
                 ->save();
 
-            $this->grantBuilder
+            (new Grant($this->db))
                 ->startupGrant()
                 ->for($user)
-                ->adminId($tokenData["invitedById"])
-                ->originalAmount($tokenData["startupAmount"])
-                ->build()
+                ->setAdminId($tokenData["invitedById"])
+                ->setOriginalAmount($tokenData["startupAmount"])
                 ->save();
+
             $this->db->getConnection()->commit();
 
             return array(
