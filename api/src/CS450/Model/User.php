@@ -67,7 +67,7 @@ final class User {
         }
 
         $executed = $stmt->bind_param(
-            "sssd",
+            "sssi",
             $this->name,
             $this->email,
             $this->passwordHash,

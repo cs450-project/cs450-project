@@ -54,6 +54,12 @@ final class AuthController
      */
     private $userBuilder;
 
+    /**
+     * @Inject
+     * @var CS450\Model\GrantBuilder
+     */
+    private $grantBuilder;
+
     private function makeJwt($uid, $role): string {
         $payload = array(
             'uid' => $uid,
@@ -85,13 +91,13 @@ final class AuthController
 
             return array(
                 'user' => array(
-                    "uid" => $user->getUid(),
+                    "uid" => $user->getId(),
                     "name" => $user->getName(),
                     "email" => strval($user->getEmail()),
                     "role" => $user->getRole(),
                     "department" => $user->getDepartment(),
                 ),
-                'token' => $this->makeJwt($user->getUid(), $user->getRole()),
+                'token' => $this->makeJwt($user->getId(), $user->getRole()),
             );
 
         } catch (\Exception $e) {
@@ -104,6 +110,7 @@ final class AuthController
         $registerData = $params["post"];
         $this->logger->info("Registering user with " . print_r($registerData, true));
      
+        $this->db->getConnection()->begin_transaction();
         try {
             $userInfo = RegisterUserInfo::create(
                 $registerData["name"],
@@ -119,6 +126,7 @@ final class AuthController
                 throw new \Exception("Registration email does not match invitation. Please see your administrator");
             }
 
+            
             $user = $this->userBuilder
                 ->name($userInfo->name)
                 ->email(strval($userInfo->email))
@@ -128,19 +136,27 @@ final class AuthController
                 ->build()
                 ->save();
 
+            $this->grantBuilder
+                ->startupGrant()
+                ->for($user)
+                ->adminId($tokenData["invitedById"])
+                ->originalAmount($tokenData["startupAmount"])
+                ->build()
+                ->save();
+            $this->db->getConnection()->commit();
+
             return array(
                 'user' => array(
-                    "uid" => $user->getUid(),
+                    "uid" => $user->getId(),
                     "name" => $user->getName(),
                     "email" => strval($user->getEmail()),
                     "role" => $user->getRole(),
                     "department" => $user->getDepartment(),
                 ),
-                'token' => $this->makeJwt($user->getUid(), $user->getRole()),
+                'token' => $this->makeJwt($user->getId(), $user->getRole()),
             );
-
-            // Add a startup fund using uid that needs to be returned from register.
         } catch (\Exception $e) {
+            $this->db->getConnection()->rollback();
             throw new Exception($e);
         }
         
@@ -192,7 +208,8 @@ final class AuthController
 
         $userDataToken = $this->jwt->encode(array(
             "email" => $to,
-            "startupAmount" => $startupFundAmount,
+            "invitedById" => $senderUid,
+            "startupAmount" => $startupFundAmount,            
         ));
 
         $this->email->sendFromTemplate(
