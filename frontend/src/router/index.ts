@@ -4,7 +4,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Login from "@/views/Login.vue";
 import Invite from "@/views/Invite.vue";
 import Register from "@/views/Register.vue";
-
+import Grants from "@/views/Grants.vue";
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
@@ -59,6 +59,11 @@ const routes: Array<RouteConfig> = [
     meta: {
       requiresAuth: true,
     },
+  },
+  {
+    path:"/grants",
+    name:"Grants",
+    component: Grants,
   },
 ];
 
