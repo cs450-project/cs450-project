@@ -2,12 +2,12 @@
 
 use PHPUnit\Framework\TestCase;
 
-use CS450\Model\User;
+use CS450\Model\UserFactory;
 use CS450\Lib\Password;
 use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
 
-final class UserTest extends TestCase {
+final class UserFactoryTest extends TestCase {
 
     private static $container;
     private static $db;

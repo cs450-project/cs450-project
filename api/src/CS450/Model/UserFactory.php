@@ -6,20 +6,13 @@ use CS450\Lib\Password;
 use CS450\Lib\EmailAddress;
 use CS450\Model\User\RegisterUserInfo;
 
-final class User {
+final class UserFactory {
     /**
      * 
      * @Inject
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
-
-    /**
-     * 
-     * @Inject
-     * @var CS450\Service\JwtService
-     */
-    private $jwt;
 
     /**
      * 
@@ -33,7 +26,6 @@ final class User {
             'uid' => $uid,
             'role' => $role,
         );
-
         return $this->jwt->encode($payload);
     }
 
