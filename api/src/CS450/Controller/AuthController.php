@@ -2,7 +2,7 @@
 
 namespace CS450\Controller;
 
-use CS450\Model\User;
+use CS450\Model\UserFactory;
 use CS450\Model\User\LoginUserInfo;
 use CS450\Model\User\RegisterUserInfo;
 use CS450\Lib\Exception;
@@ -11,7 +11,7 @@ use CS450\Lib\EmailAddress;
 /**
  * @codeCoverageIgnore
  */
-class AuthController
+final class AuthController
 {
     /**
      * @Inject("env")
@@ -26,9 +26,9 @@ class AuthController
 
     /**
      * @Inject
-     * @var CS450\Model\User
+     * @var CS450\Model\UserFactory
      */
-    private $user;
+    private $userFactory;
 
     /**
      * @Inject
@@ -48,6 +48,15 @@ class AuthController
      */
     private $db;
 
+    private function makeJwt($uid, $role): string {
+        $payload = array(
+            'uid' => $uid,
+            'role' => $role,
+        );
+
+        return $this->jwt->encode($payload);
+    }
+
     public function login($params)
     {
         $loginData = $params["post"];
@@ -59,9 +68,26 @@ class AuthController
                 $loginData["password"],
             );
 
+            $user = $this->userFactory->findByEmail($loginInfo->email);
+
+            if (!$user) {
+                throw new \Exception("User not found", 420);
+            }
+            else if (!$loginInfo->password->verifyhash($user->getPasswordHash())) {
+                throw new \Exception("Incorrect password", 69);
+            }
+
             return array(
-                'token' => $this->user->login($loginInfo->email, $loginInfo->password),
+                'user' => array(
+                    "uid" => $user->getUid(),
+                    "name" => $user->getName(),
+                    "email" => strval($user->getEmail()),
+                    "role" => $user->getRole(),
+                    "department" => $user->getDepartment(),
+                ),
+                'token' => $this->makeJwt($user->getUid(), $user->getRole()),
             );
+
         } catch (\Exception $e) {
             $this->logger->error("caught error throwing new one");
             throw new Exception($e);
@@ -81,14 +107,22 @@ class AuthController
                 $registerData["department"],
             );
 
+            $userDataToken = $registerData["userDataToken"];
+            $tokenData = $this->jwt->decode($userDataToken);
+
+            if ($tokenData["email"] !== $registerData["email"]) {
+                throw new \Exception("Registration email does not match invitation. Please see your administrator");
+            }
+
             $payload = array(
                 'token' => $this->user->register($userInfo),
             );
+
+            // Add a startup fund using uid that needs to be returned from register.
         } catch (\Exception $e) {
             throw new Exception($e);
         }
         
-
         return $payload;
     }
 
@@ -143,8 +177,9 @@ class AuthController
         $stmt->bind_result($departmentName);
         $stmt->fetch();
 
-        $statupToken = $this->jwt->encode(array(
-            'startupAmount' => $startupFundAmount,
+        $userDataToken = $this->jwt->encode(array(
+            "email" => $to,
+            "startupAmount" => $startupFundAmount,
         ));
 
         $this->email->sendFromTemplate(
@@ -152,16 +187,16 @@ class AuthController
             "Welcome! Register with grant management",
             "registration_invitation",
             array(
-                "department"  => "IT",
+                "department"  => $departmentName,
                 "admin_email" => $adminEmail,
                 "startup_amt" => $startupFundAmount,
                 "registration_url" => sprintf("%s/#/register/%s",
                     self::hostname(),
                     urlencode(base64_encode(json_encode(array(
-                        "email" => $params["post"]["email"],
+                        "email" => $to,
                         "name" => $params["post"]["name"],
                         "department" => $facultyDepartmentId,
-                        "startupToken" => $startupToken,
+                        "userDataToken" => $userDataToken,
                     )))),
                 ),
             ),

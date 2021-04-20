@@ -2,37 +2,30 @@
 
 namespace CS450\Model;
 
-use CS450\Lib\Password;
+use CS450\Model\User;
 use CS450\Lib\EmailAddress;
-use CS450\Model\User\RegisterUserInfo;
 
 final class UserFactory {
     /**
-     * 
      * @Inject
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
     /**
-     * 
      * @Inject
      * @var CS450\Service\DbService
      */
     private $db;
 
-    private function makeJwt($uid, $role): string {
-        $payload = array(
-            'uid' => $uid,
-            'role' => $role,
-        );
-        return $this->jwt->encode($payload);
-    }
+    public function findByEmail(EmailAddress $email): ?User {
+        $selectEmailQ = <<<EOD
+            SELECT id, name, email, password, user_role, department
+            FROM tbl_fact_users
+            WHERE email=?
+        EOD;
 
-    public function login(EmailAddress $email, Password $password) {
         $conn = $this->db->getConnection();
-
-        $selectEmailQ = "SELECT id, password, user_role FROM tbl_fact_users WHERE email=?";
         $stmt = $conn->prepare($selectEmailQ);
 
         if (!$stmt) {
@@ -49,75 +42,128 @@ final class UserFactory {
             throw new \Exception($conn->error);
         }
 
-        $stmt->bind_result($uid, $storedPassword, $role);
-        $stmt->fetch();
+        $this->logger->info("Running sql " . $selectEmailQ . "(=" . $email .")");
 
-        $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $storedPassword, $password, $uid));
+        $result = $stmt->get_result();
+        $userRow = $result->fetch_assoc();
+        $this->logger->info($userRow);
 
-        if (!$storedPassword) {
-            throw new \Exception("User not found", 420);
-        }
-        else if (!$password->verifyhash($storedPassword)) {
-            throw new \Exception("Incorrect password", 69);
-        }
-
-        $this->logger->info(sprintf(
-            "User (%s) has been authenticated with role %s",
-            $email,
-            $role,
-        ));
-
-        return $this->makeJwt($uid, $role);
-    }
-
-    public function register(RegisterUserInfo $userInfo): string {
-        $role = 'FACULTY';
-        $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department, user_role) VALUES (?, ?, ?, ?, '$role')";
-
-        $conn = $this->db->getConnection();
-        $stmt = $conn->prepare($insertUserSql);
-
-        if (!$stmt) {
-            $errMsg = sprintf("An error occurred preparing your query: %s - %s", $insertUserSql, $conn->error);
-            throw new \Exception($errMsg);
-        }
-
-        $executed = $stmt->bind_param(
-            "sssd",
-            $userInfo->name,
-            $userInfo->email,
-            $userInfo->password,
-            $userInfo->department,
-        ) && $stmt->execute() && $stmt->close();
-
-        if (!$executed) {
-            if (Self::errorIsEmailExists($conn->error_list[0]["errno"])) {
-                $this->logger->info(sprintf(
-                    "Existing user found checking password %s %s",
-                    $userInfo->email,
-                    $userInfo->password,
-                ));
-
-                // check if passwords match.
-                // -> if so log the user in
-                // else -> redirect to login with error email exists
-                return $this->login(
-                    $userInfo->email,
-                    $userInfo->password,
-                );
-            } else {
-                // Something went wrong at the DB level
-                throw new \Exception($conn->error);
-            }
-        }
-
-        $uid = $conn->insert_id;
-        $this->logger->info(sprintf("Created new user with id: %d", $uid));
-
-        return $this->makeJwt($uid, $role);
-    }
-
-    private static function errorIsEmailExists(int $errorcode): bool {
-        return $errorcode == 1062;
+        return $userRow
+            ? User::builder()
+                ->id($userRow["id"])
+                ->name($userRow["name"])
+                ->email($userRow["email"])
+                ->role($userRow["user_role"])
+                ->password($userRow["password"])
+                ->department($userRow["department"])
+                ->build()
+            : null;
     }
 }
+
+//     /**
+//      * @Inject
+//      * @var \Psr\Log\LoggerInterface
+//      */
+//     private $logger;
+
+//     /**
+//      * @Inject
+//      * @var CS450\Service\DbService
+//      */
+//     private $db;
+
+//     public function login(EmailAddress $email, Password $password): User {
+        // $conn = $this->db->getConnection();
+
+        // $user = $user->findByEmail($email);
+        // return null;
+        
+        // $selectEmailQ = "SELECT id, name, email, password, user_role, department FROM tbl_fact_users WHERE email=?";
+        // $stmt = $conn->prepare($selectEmailQ);
+
+        // if (!$stmt) {
+        //     $errMsg = sprintf("An error occurred preparing your query: %s, %s", $selectEmailQ, $conn->error);
+        //     throw new \Exception($errMsg);
+        // }
+
+        // $executed = $stmt->bind_param(
+        //     "s",
+        //     $email,
+        // ) && $stmt->execute();
+
+        // if (!$executed) {
+        //     throw new \Exception($conn->error);
+        // }
+
+        // $result = $stmt->get_result();
+        // $row = $result->fetch_assoc();
+//         //$stmt->fetch();
+
+//         $this->logger->debug(sprintf("verifying stored hash %s against new hash %s for user %d", $row["password"], $password, $row["id"]));
+
+//         if (!$storedPassword) {
+//             throw new \Exception("User not found", 420);
+//         }
+//         else if (!$password->verifyhash($row["password"])) {
+//             throw new \Exception("Incorrect password", 69);
+//         }
+
+//         $this->logger->info(sprintf(
+//             "User (%s) has been authenticated with role %s",
+//             $email,
+//             $row["user_role"],
+//         ));
+//     }
+
+//     public function register(RegisterUserInfo $userInfo): string {
+//         $role = 'FACULTY';
+//         $insertUserSql = "INSERT INTO tbl_fact_users (name, email, password, department, user_role) VALUES (?, ?, ?, ?, '$role')";
+
+//         $conn = $this->db->getConnection();
+//         $stmt = $conn->prepare($insertUserSql);
+
+//         if (!$stmt) {
+//             $errMsg = sprintf("An error occurred preparing your query: %s - %s", $insertUserSql, $conn->error);
+//             throw new \Exception($errMsg);
+//         }
+
+//         $executed = $stmt->bind_param(
+//             "sssd",
+//             $userInfo->name,
+//             $userInfo->email,
+//             $userInfo->password,
+//             $userInfo->department,
+//         ) && $stmt->execute() && $stmt->close();
+
+//         if (!$executed) {
+//             if (Self::errorIsEmailExists($conn->error_list[0]["errno"])) {
+//                 $this->logger->info(sprintf(
+//                     "Existing user found checking password %s %s",
+//                     $userInfo->email,
+//                     $userInfo->password,
+//                 ));
+
+//                 // check if passwords match.
+//                 // -> if so log the user in
+//                 // else -> redirect to login with error email exists
+//                 return $this->login(
+//                     $userInfo->email,
+//                     $userInfo->password,
+//                 );
+//             } else {
+//                 // Something went wrong at the DB level
+//                 throw new \Exception($conn->error);
+//             }
+//         }
+
+//         $uid = $conn->insert_id;
+//         $this->logger->info(sprintf("Created new user with id: %d", $uid));
+
+//         return $this->makeJwt($uid, $role);
+//     }
+
+//     private static function errorIsEmailExists(int $errorcode): bool {
+//         return $errorcode == 1062;
+//     }
+// }

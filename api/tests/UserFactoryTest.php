@@ -2,29 +2,53 @@
 
 use PHPUnit\Framework\TestCase;
 
-use CS450\Model\UserFactory;
 use CS450\Lib\Password;
-use CS450\Model\User\LoginUserInfo;
-use CS450\Model\User\RegisterUserInfo;
+use CS450\Lib\EmailAddress;
+use CS450\Model\UserFactory;
 
 final class UserFactoryTest extends TestCase {
 
-    private static $container;
     private static $db;
+    private static $container;
 
     public static function setUpBeforeClass(): void {
         self::$container = require __DIR__ . '/testdata/bootstrap.php';
         self::$db = self::$container->get(CS450\Service\DbService::class);
     }
 
+    protected function setUp(): void {
+        $conn = self::$db->getConnection();
+        $result = $conn->query(sprintf(
+            "INSERT INTO tbl_fact_users (name, email, password, department) VALUES ('%s', '%s', '%s', %d)",
+            "Test User",
+            "test@example.com",
+            Password::fromString("TestPassword1"),
+            1
+        ));
+        $this->assertTrue($conn->error === "", $conn->error);
+    }
+
     protected function tearDown(): void
     {
         $conn = self::$db->getConnection();
-        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0;");
-        $result = $conn->query("DELETE FROM tbl_fact_users WHERE 1=1;");
+        $result = $conn->query("DELETE FROM tbl_fact_users WHERE email='test@example.com'");
         $this->assertTrue($result != false);
     }
 
+    public function testReturnsFoundUser(): void {
+        $userFactory = self::$container->get(CS450\Model\UserFactory::class);
+        $user = $userFactory->findByEmail(EmailAddress::fromString("test@example.com"));
+
+        $this->assertNotNull($user);
+    }
+
+    public function testReturnsNullForUserNotFound(): void {
+        $userFactory = self::$container->get(CS450\Model\UserFactory::class);
+        $user = $userFactory->findByEmail(EmailAddress::fromString("not_in_db@example.com"));
+
+        $this->assertNull($user);
+    }
+/*
     public function testLoginCreatesJwtWithGoodData(): void {
         $conn = self::$db->getConnection();
         $result = $conn->query(sprintf(
@@ -131,4 +155,5 @@ final class UserFactoryTest extends TestCase {
         $this->expectException(\Exception::class);
         $jwt = $user->register($registerInfo2);
     }
+    */
 }
