@@ -48,6 +48,12 @@ final class AuthController
      */
     private $db;
 
+    /**
+     * @Inject
+     * @var CS450\Model\UserBuilder
+     */
+    private $userBuilder;
+
     private function makeJwt($uid, $role): string {
         $payload = array(
             'uid' => $uid,
@@ -89,7 +95,6 @@ final class AuthController
             );
 
         } catch (\Exception $e) {
-            $this->logger->error("caught error throwing new one");
             throw new Exception($e);
         }
     }
@@ -114,8 +119,24 @@ final class AuthController
                 throw new \Exception("Registration email does not match invitation. Please see your administrator");
             }
 
-            $payload = array(
-                'token' => $this->user->register($userInfo),
+            $user = $this->userBuilder
+                ->name($userInfo->name)
+                ->email(strval($userInfo->email))
+                ->department($userInfo->department)
+                ->password(strval($userInfo->password))
+                ->role("FACULTY")
+                ->build()
+                ->save();
+
+            return array(
+                'user' => array(
+                    "uid" => $user->getUid(),
+                    "name" => $user->getName(),
+                    "email" => strval($user->getEmail()),
+                    "role" => $user->getRole(),
+                    "department" => $user->getDepartment(),
+                ),
+                'token' => $this->makeJwt($user->getUid(), $user->getRole()),
             );
 
             // Add a startup fund using uid that needs to be returned from register.
@@ -125,14 +146,6 @@ final class AuthController
         
         return $payload;
     }
-
-    private static function hostname(){
-        return sprintf(
-          "%s://%s",
-          isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-          $_SERVER['SERVER_NAME'],
-        );
-      }
 
     public function sendInvite($params) {
         if (empty($params["token"]) || $params["token"]["role"] !== "ADMINISTRATOR") {
@@ -200,6 +213,14 @@ final class AuthController
                     )))),
                 ),
             ),
+        );
+    }
+
+    private static function hostname(){
+        return sprintf(
+            "%s://%s",
+            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+            $_SERVER['SERVER_NAME'],
         );
     }
 }

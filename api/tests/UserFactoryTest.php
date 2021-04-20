@@ -18,6 +18,8 @@ final class UserFactoryTest extends TestCase {
 
     protected function setUp(): void {
         $conn = self::$db->getConnection();
+        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0");
+        $result = $conn->query("TRUNCATE TABLE tbl_fact_users");
         $result = $conn->query(sprintf(
             "INSERT INTO tbl_fact_users (name, email, password, department) VALUES ('%s', '%s', '%s', %d)",
             "Test User",
@@ -31,7 +33,8 @@ final class UserFactoryTest extends TestCase {
     protected function tearDown(): void
     {
         $conn = self::$db->getConnection();
-        $result = $conn->query("DELETE FROM tbl_fact_users WHERE email='test@example.com'");
+        $result = $conn->query("SET FOREIGN_KEY_CHECKS = 0");
+        $result = $conn->query("TRUNCATE TABLE tbl_fact_users");
         $this->assertTrue($result != false);
     }
 

@@ -4,76 +4,32 @@ namespace CS450\Model;
 
 use CS450\Lib\Password;
 use CS450\Lib\EmailAddress;
-
-
-final class UserBuilder {
-    public $id;
-    public $name;
-    public $email;
-    public $role;
-    public $password;
-    public $department;
-
-    function __construct() {}
-
-    function build() {
-        return new User($this);
-    }
-
-    function id($id) {
-        $this->id = $id;
-        return $this;
-    }
-
-    function name($name) {
-        $this->name = $name;
-        return $this;
-    }
-
-    function email($email) {
-        $this->email = $email;
-        return $this;
-    }
-
-    function role($role) {
-        $this->role = $role;
-        return $this;
-    }
-
-    function password($password) {
-        $this->password = $password;
-        return $this;
-    }
-
-    function department($department) {
-        $this->department = $department;
-        return $this;
-    }
-}
+use CS450\Model\UserBuilder;
+use CS450\Service\DbService;
 
 final class User {
-    private $uid;
+    private $db;
+
+    private $id;
     private $name;
     private $email;
     private $passwordHash;
     private $role;
     private $department;
 
-    public static function builder(): UserBuilder {
-        return new UserBuilder();
-    }
+    public function __construct(UserBuilder $builder, DbService $db) {
+        $this->db = $db;
 
-    public function __construct(UserBuilder $builder) {
-        $this->uid = $builder->id;
-        $this->email = EmailAddress::fromString($builder->email);
-        $this->passwordHash = $builder->password;
+        $this->id = $builder->id;
         $this->name = $builder->name;
         $this->role = $builder->role;
         $this->department = $builder->department;
+        $this->passwordHash = $builder->password;
+        $this->email = EmailAddress::fromString($builder->email);
     }
 
-    public function getUid(): int {
-        return $this->uid;
+    public function getId(): int {
+        return $this->id;
     }
 
     public function getName(): string {
@@ -94,5 +50,46 @@ final class User {
 
     public function getDepartment() {
         return $this->department;
+    }
+
+    public function save(): Self {
+        $insertUserSql = <<<EOD
+            INSERT INTO tbl_fact_users (name, email, password, department, user_role)
+            VALUES (?, ?, ?, ?, '$this->role')
+        EOD;
+
+        $conn = $this->db->getConnection();
+        $stmt = $conn->prepare($insertUserSql);
+
+        if (!$stmt) {
+            $errMsg = sprintf("An error occurred preparing your query: %s - %s", $insertUserSql, $conn->error);
+            throw new \Exception($errMsg);
+        }
+
+        $executed = $stmt->bind_param(
+            "sssd",
+            $this->name,
+            $this->email,
+            $this->passwordHash,
+            $this->department,
+        ) && $stmt->execute() && $stmt->close();
+
+        if (!$executed) {
+            $errNo = $conn->error_list[0]["errno"];
+            if (Self::errorIsEmailExists($errNo)) {
+                throw new \Exception(
+                    "A user with that email is already registered",
+                    $errNo,
+                );
+            }
+            throw new \Exception($conn->error);
+        }
+
+        $this->id = $conn->insert_id;
+        return $this;
+    }
+
+    private static function errorIsEmailExists(int $errorcode): bool {
+        return $errorcode == 1062;
     }
 }
