@@ -11,6 +11,7 @@ export default new Vuex.Store({
     authData: { token: "" },
     errorMsg: "",
     departments: [],
+    grants: [],
   },
   getters: {
     errorMsg: (state) => {
@@ -30,8 +31,23 @@ export default new Vuex.Store({
         };
       });
     },
+    grants: (state) => {
+      return state.grants;
+    },
+    grantOptions:(state)=>{
+      return state.grants.map((grant: { name: string; type: string }) => {
+        return {
+          value: grant.name,
+          text: grant.type,
+        };
+      });
+
+    },
   },
   mutations: {
+    setGrants(state, grants = []){
+      state.grants=grants;
+    },
     setDepartments(state, departments = []) {
       state.departments = departments;
     },
@@ -89,6 +105,10 @@ export default new Vuex.Store({
     async fetchDepartments({ commit }) {
       const { data } = await axios.get("/api/departments");
       commit("setDepartments", data);
+    },
+    async getGrants({commit}){
+      const { data } = await axios.get("/api/grants");
+      commit("setGrants", data);
     },
     sendInvite({ commit }, inviteData) {
       commit("clearError");

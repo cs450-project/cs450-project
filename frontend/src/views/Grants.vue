@@ -17,14 +17,18 @@
 </template>
 
 <script> 
-import axios from "axios";
+//import axios from "axios";
+import Vue from "vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 export default{
     name:"Grants",
     data(){
         return{
-      //      grants:[],
+           grants
       // HARDCODED GRANTS TO PROVE THAT THE TABLE LISTING WORKS
-            grants:[
+      /*
+      grants:[
                 {
                     name:"Grant 1",
                     type: "NSF"
@@ -37,18 +41,19 @@ export default{
                     name:"Grant 3",
                     type: "VT"
                 }
-            ],
+            ],*/
         };
     },
-    /*
-    methods: {
-        async getGrants(){
-            const {data} = await axios.get("/grants");
-            this.grants=data;
-        }
+    computed:{
+        ...mapGetters(["errorMsg", "GrantOptions"]),
     },
-    mounted(){
+    methods: {
+        ...mapMutations(["setToken", "setError"]),
+        ...mapActions(["register", "getGrants"]),
+    },
+    //mounted(){},
+    created(){
         this.getGrants();
-    },*/
+    }
 };
 </script>

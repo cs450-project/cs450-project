@@ -14,7 +14,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
         $r->addRoute("GET", "/", "CS450\Controller\HomeController");
         $r->addRoute("GET", "/departments", "CS450\Controller\DepartmentController");
         $r->addRoute('GET', '/grants', 'CS450\Controller\GrantController');
-        
+
         $r->addGroup("/auth", function (RouteCollector $r) {
             $authControllerName = "CS450\Controller\AuthController";
 

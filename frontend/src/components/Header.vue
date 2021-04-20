@@ -14,6 +14,9 @@
     <b-nav-item>
       <router-link to="/about">About</router-link>
     </b-nav-item>
+     <b-nav-item>
+      <router-link to="/grants">Grants</router-link>
+    </b-nav-item>
     <b-nav-item class="ml-auto" @click="logout">
       <router-link v-if="authenticated" to="">Logout</router-link>
       <router-link v-else to="/login">Login</router-link>
