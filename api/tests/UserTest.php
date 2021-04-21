@@ -27,6 +27,7 @@ final class UserTest extends TestCase {
     
         self::$T = new TextWrapper($app);
         self::$T->getMigrate("testing");
+        self::$T->getSeed("testing");
     }
     
     protected function tearDown(): void{

@@ -25,6 +25,7 @@ final class GrantTest extends TestCase {
     
         self::$T = new TextWrapper($app);
         self::$T->getMigrate("testing");
+        self::$T->getSeed("testing");
     }
     
     protected function tearDown(): void{
@@ -51,14 +52,13 @@ final class GrantTest extends TestCase {
     }
 
     public function testWritesOnSave(): void {
-        $admin = self::$db->getConnection()->query("SELECT * FROM tbl_fact_users")->fetch_object();
         $grant = (new Grant(self::$db))
             ->setTitle("Test Grant")
             ->setGrantNumber("TEST-1")
             ->setSourceId(1)
             ->setOriginalAmount(0)
             ->setBalance(0)
-            ->setAdminId($admin->id)
+            ->setAdminId(1)
             ->save();
 
         $result = self::$db->getConnection()->query("SELECT * FROM tbl_fact_grants WHERE grant_number='TEST-1'");
