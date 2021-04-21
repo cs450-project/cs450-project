@@ -39,14 +39,13 @@ final class UserTest extends TestCase {
 
     public function testCreatesFromBuilder(): void {
         $pwHash = password_hash("test.PASSword.secure", PASSWORD_DEFAULT);
-        $user = self::$container->get(CS450\Model\UserBuilder::class)
-            ->id(1)
-            ->name("Test")
-            ->email("test@example.com")
-            ->role("FACULTY")
-            ->password($pwHash)
-            ->department(1)
-            ->build();
+        $user = (new User(self::$db))
+            ->setId(1)
+            ->setName("Test")
+            ->setEmail("test@example.com")
+            ->setRole("FACULTY")
+            ->setPasswordHash($pwHash)
+            ->setDepartment(1);
 
         $this->assertEquals(1, $user->getId());
         $this->assertEquals("Test", $user->getName());
@@ -63,13 +62,12 @@ final class UserTest extends TestCase {
 
     public function testWritesOnSave(): void {
         $pwHash = password_hash("test.PASSword.secure", PASSWORD_DEFAULT);
-        $user = self::$container->get(CS450\Model\UserBuilder::class)
-            ->name("Test")
-            ->email("testWritesOnSave@example.net")
-            ->role("FACULTY")
-            ->password($pwHash)
-            ->department(1)
-            ->build()
+        $user = (new User(self::$db))
+            ->setName("Test")
+            ->setEmail("testWritesOnSave@example.net")
+            ->setRole("FACULTY")
+            ->setPasswordHash($pwHash)
+            ->setDepartment(1)
             ->save();
 
         $result = self::$db->getConnection()->query("SELECT * FROM tbl_fact_users WHERE email='testWritesOnSave@example.net'");
