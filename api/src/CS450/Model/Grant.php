@@ -29,12 +29,20 @@ final class Grant {
         return $this->title;
     }
 
+    public function getGrantNumber() {
+        return $this->grantNumber;
+    }
+
     public function getStatus() {
         return $this->status;
     }
 
     public function getAdminId() {
         return $this->adminId;
+    }
+
+    public function getSourceId() {
+        return $this->sourceId;
     }
 
     public function getBalance() {
