@@ -37,7 +37,7 @@ final class UserTest extends TestCase {
         $this->assertTrue($result != false);
     }
 
-    public function testCreatesFromBuilder(): void {
+    public function testCreateUser(): void {
         $pwHash = password_hash("test.PASSword.secure", PASSWORD_DEFAULT);
         $user = (new User(self::$db))
             ->setId(1)
