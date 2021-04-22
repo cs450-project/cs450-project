@@ -132,13 +132,13 @@ final class Grant {
 
         $executed = $stmt->bind_param(
             "ssiddsi",
-            $this->getGrantNumber(),
-            $this->getTitle(),
-            $this->getSourceId(),
-            $this->getOriginalAmount(),
-            $this->getBalance(),
-            $this->getStatus(),
-            $this->getAdminId(),
+            $this->grant_number,
+            $this->title,
+            $this->source_id,
+            $this->original_amt,
+            $this->balance,
+            $this->status,
+            $this->administrator_id,
         ) && $stmt->execute() && $stmt->close();
         
 
