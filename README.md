@@ -50,3 +50,4 @@ For help with Vue:
 2. Ask Alex on Slack
 
 (in that order)
+# CS450-Trial
