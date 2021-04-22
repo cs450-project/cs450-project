@@ -10,12 +10,13 @@ final class Grant {
     private $id;
     private $title;
     private $status;
-    private $adminId;
     private $balance;
-    private $sourceId;
-    private $grantNumber;
-    private $originalAmount;
+    private $source_id;
+    private $grant_number;
+    private $original_amt;
+    private $administrator_id;
     private $recipients = [];
+
 
     public function __construct(DbService $db) {
         $this->db = $db;
@@ -30,7 +31,7 @@ final class Grant {
     }
 
     public function getGrantNumber() {
-        return $this->grantNumber;
+        return $this->grant_number;
     }
 
     public function getStatus() {
@@ -38,11 +39,11 @@ final class Grant {
     }
 
     public function getAdminId() {
-        return $this->adminId;
+        return $this->administrator_id;
     }
 
     public function getSourceId() {
-        return $this->sourceId;
+        return $this->source_id;
     }
 
     public function getBalance() {
@@ -50,7 +51,7 @@ final class Grant {
     }
 
     public function getOriginalAmount() {
-        return $this->originalAmount;
+        return $this->original_amt;
     }
 
     public function getRecipients() {
@@ -65,8 +66,8 @@ final class Grant {
 
         $this->status = "APPROVED";
         $this->title = "Starup Fund";
-        $this->sourceId = $oduSourceId;
-        $this->grantNumber = "ODU-STARTUP";
+        $this->source_id = $oduSourceId;
+        $this->grant_number = "ODU-STARTUP";
 
         return $this;
     }
@@ -87,17 +88,17 @@ final class Grant {
     }
 
     function setGrantNumber($grantNumber): Self {
-        $this->grantNumber = $grantNumber;
+        $this->grant_number = $grantNumber;
         return $this;
     }
 
     function setSourceId($sourceId): Self {
-        $this->sourceId = $sourceId;
+        $this->source_id = $sourceId;
         return $this;
     }
 
     function setOriginalAmount($originalAmount): Self {
-        $this->originalAmount = $originalAmount;
+        $this->original_amt = $originalAmount;
         return $this;
     }
 
@@ -112,7 +113,7 @@ final class Grant {
     }
 
     function setAdminId($adminId): Self {
-        $this->adminId = $adminId;
+        $this->administrator_id = $adminId;
         return $this;
     }
 
@@ -131,13 +132,13 @@ final class Grant {
 
         $executed = $stmt->bind_param(
             "ssiddsi",
-            $this->grantNumber,
-            $this->title,
-            $this->sourceId,
-            $this->originalAmount,
-            $this->balance,
-            $this->status,
-            $this->adminId,
+            $this->getGrantNumber(),
+            $this->getTitle(),
+            $this->getSourceId(),
+            $this->getOriginalAmount(),
+            $this->getBalance(),
+            $this->getStatus(),
+            $this->getAdminId(),
         ) && $stmt->execute() && $stmt->close();
         
 
