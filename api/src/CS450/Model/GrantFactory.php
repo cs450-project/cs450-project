@@ -35,6 +35,7 @@ final class GrantFactory {
                 "title" => $grant->getTitle(),
                 "status" => $grant->getStatus(),
                 "balance" => $grant->getBalance(),
+                "originalAmount" => $grant->getOriginalAmount(),
                 "source" => "TODO",
                 "grant_number" => $grant->getGrantNumber(),
                 "administrator" => "TODO",
