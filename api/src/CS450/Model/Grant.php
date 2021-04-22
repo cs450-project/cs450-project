@@ -4,7 +4,7 @@ namespace CS450\Model;
 
 use CS450\Service\DbService;
 
-final class Grant {
+final class Grant implements \JsonSerializable {
     private $db;
 
     private $id;
@@ -15,8 +15,18 @@ final class Grant {
     private $grant_number;
     private $original_amt;
     private $administrator_id;
-    private $recipients = [];
 
+    private $_entity_id;
+    private $_entity_name;
+    private $_entity_type;
+
+    private $_admin_id;
+    private $_admin_name;
+    private $_admin_role;
+    private $_admin_email;
+    private $_admin_department;
+
+    private $recipients = [];
 
     public function __construct(DbService $db) {
         $this->db = $db;
@@ -56,6 +66,23 @@ final class Grant {
 
     public function getRecipients() {
         return $this->recipients;
+    }
+
+    public function getSourceEntity() {
+        return array(
+            "id" => $this->_entity_id,
+            "name" => $this->_entity_name,
+            "type" => $this->_entity_type,
+        );
+    }
+
+    public function getAdministrator() {
+        return (new User($this->db))
+            ->setId($this->_admin_id)
+            ->setName($this->_admin_name)
+            ->setEmail($this->_admin_email)
+            ->setRole($this->_admin_role)
+            ->setDepartment($this->_admin_department);
     }
 
     function startupGrant() {
@@ -176,5 +203,18 @@ final class Grant {
         $stmt->close();
         
         return $this;
+    }
+
+    public function jsonSerialize() {
+        return array(
+            "id" => $this->getId(),
+            "title" => $this->getTitle(),
+            "source" => $this->getSourceEntity(),
+            "number" => $this->getGrantNumber(),
+            "originalAmount" => $this->getOriginalAmount(),
+            "balance" => $this->getBalance(),
+            "status" =>  $this->getStatus(),
+            "administrator" => $this->getAdministrator(),
+        );
     }
 }
