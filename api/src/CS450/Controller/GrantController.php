@@ -29,4 +29,8 @@ class GrantController
     {
         return $this->grantFactory->findAll();
     }
+
+    public function getFacultyGrants($params){
+        return $this->grantFactory->findbyUser();
+    }
 }

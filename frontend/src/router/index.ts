@@ -6,6 +6,8 @@ import Login from "@/views/Login.vue";
 import Invite from "@/views/Invite.vue";
 import Register from "@/views/Register.vue";
 import Dashboard from "@/views/Dashboard.vue";
+//Adding a line for Search.vue
+import Search from "@/views/Search.vue";
 
 Vue.use(VueRouter);
 
@@ -66,6 +68,15 @@ const routes: Array<RouteConfig> = [
     path: "/invite",
     name: "Invite",
     component: Invite,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  //Adding my component for Search.vue
+    {
+    path: "/search",
+    name: "Search",
+    component: Search,
     meta: {
       requiresAuth: true,
     },

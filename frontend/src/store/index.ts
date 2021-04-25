@@ -97,6 +97,10 @@ export default new Vuex.Store({
       const { data } = await axios.get("/api/grants");
       commit("setGrants", data);
     },
+    async fetchFacultyGrants({ commit}){
+      const { data } = await axios.get("/api/grants");
+      commit("setGrants", data);
+    },
     async fetchDepartments({ commit }) {
       const { data } = await axios.get("/api/departments");
       commit("setDepartments", data);

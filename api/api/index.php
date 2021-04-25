@@ -12,6 +12,16 @@ $container = require __DIR__ . "/../app/bootstrap.php";
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addGroup("/api", function (RouteCollector $r) {
         $r->addRoute("GET", "/", "CS450\Controller\HomeController");
+
+        //Creating a Group for Grants, so that we could choose between seeing ALL grants and all grants under a specific user.
+        //Admittedly, I haven't figured out what I could do here.
+        /** 
+         * $r->addGroup("/grants", function (RouteCollector $r) {
+         * $grantControllerName = "CS450\Controller\GrantController";
+         * $r->addRoute("POST", "/grants", [$grantControllerName, "__invoke"]);
+         * $r->addRoute("POST", "/search", [$grantControllerName, "getFacultyGrants"]);
+         * }
+        */
         $r->addRoute("GET", "/grants", "CS450\Controller\GrantController");
         $r->addRoute("GET", "/departments", "CS450\Controller\DepartmentController");
 

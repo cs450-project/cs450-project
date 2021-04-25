@@ -46,4 +46,34 @@ final class GrantFactory {
 
         return $grants;
     }
+
+    public function findbyUser($params):array{
+        $userName=$params["name"];
+        // Wrote it just in case I need it
+        $department=$params["department"];
+        $selectUserGrants = <<<EOD
+            SELECT a.name as faculty_name , c.grant_number, c.title, d.name as department from tbl_fact_users a
+            JOIN (SELECT grant_i , user_id FROM tbl_map_grant_users) b on a.id = b.user_id JOIN tbl_fact_grants c on b.grant_id = c.source_id
+            JOIN tbl_fact_departments d on a.department = d.id
+            WHERE a.user_role = ‘FACULTY’
+            AND a.name=$userName 
+            AND d.name=$department
+            AND c.status in ('PENDING' , 'APPROVED');
+        EOD;
+
+        $conn = $this->db->getConnection();
+        $result = $conn->query($selectUserGrants);
+
+        if (!$result) {
+            $errMsg = sprintf("An error occurred executing your query: %s, %s", $selectUserGrants, $conn->error);
+            throw new \Exception($errMsg);
+        }
+
+        $grants = [];
+        while($grant = $result->fetch_object("CS450\Model\Grant", [$this->db])) {
+            $grants[] = $grant;
+        }
+
+        return $grants;
+    }
 }
