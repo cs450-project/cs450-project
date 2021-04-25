@@ -10,11 +10,8 @@ final class User {
 
     private $id;
     private $name;
-    private $email;
-    private $passwordHash;
-    private $role;
-    private $department;
-
+    private $type;
+    
     public function __construct(GrantBuilder $builder, DbService $db) {
         $this->db = $db;
 

@@ -25,7 +25,8 @@ export default{
     name:"Grants",
     data(){
         return{
-           grants
+            // Can not figure out how to map data and showcase it here.
+           grants:{},
       // HARDCODED GRANTS TO PROVE THAT THE TABLE LISTING WORKS
       /*
       grants:[
@@ -51,7 +52,11 @@ export default{
         ...mapMutations(["setToken", "setError"]),
         ...mapActions(["register", "getGrants"]),
     },
-    //mounted(){},
+    mounted(){
+        if(this.getGrants){
+            this.grants=this.getGrants;
+        }
+    },
     created(){
         this.getGrants();
     }
