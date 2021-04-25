@@ -42,6 +42,7 @@ final class Grant implements \JsonSerializable {
 
     public function getGrantNumber() {
         return $this->grant_number;
+
     }
 
     public function getStatus() {
@@ -62,6 +63,7 @@ final class Grant implements \JsonSerializable {
 
     public function getOriginalAmount() {
         return $this->original_amt;
+
     }
 
     public function getRecipients() {
@@ -126,6 +128,7 @@ final class Grant implements \JsonSerializable {
 
     function setOriginalAmount($originalAmount): Self {
         $this->original_amt = $originalAmount;
+
         return $this;
     }
 
@@ -217,4 +220,5 @@ final class Grant implements \JsonSerializable {
             "administrator" => $this->getAdministrator(),
         );
     }
+
 }
