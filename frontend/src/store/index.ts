@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    authData: { token: "" },
+    authData: { token: "", user:{} },
     errorMsg: "",
     grants: [],
     departments: [],
@@ -34,6 +34,8 @@ export default new Vuex.Store({
         };
       });
     },
+    user: (state) => {
+    return state.authData?.user;}
   },
   mutations: {
     setGrants(state, grants = []) {
@@ -97,8 +99,8 @@ export default new Vuex.Store({
       const { data } = await axios.get("/api/grants");
       commit("setGrants", data);
     },
-    async fetchFacultyGrants({ commit}){
-      const { data } = await axios.get("/api/grants");
+    async fetchFacultyGrants({ commit}, credentials){
+      const { data } = await axios.get("/api/grants/",credentials);
       commit("setGrants", data);
     },
     async fetchDepartments({ commit }) {

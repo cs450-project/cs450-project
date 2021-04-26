@@ -30,7 +30,7 @@ import { mapActions, mapGetters } from "vuex";
 export default Vue.extend({
   name: "Dashboard",
   computed: {
-    ...mapGetters(["grants"]),
+    ...mapGetters(["grants", "users"]),
   },
   methods: {
     ...mapActions(["fetchGrants"]),
