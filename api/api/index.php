@@ -27,6 +27,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
         $r->addGroup("/admin", function (RouteCollector $r) {
             $r->addRoute("GET", "/faculty", ["CS450\Controller\AdminController", "getFaculty"]);
+            $r->addRoute("DELETE", "/faculty/{id:\d+}", ["CS450\Controller\AdminController", "deleteFaculty"]);
         });
     });
 });

@@ -67,6 +67,7 @@ final class UserFactory {
                 WHERE id=$id
             )
             AND id NOT IN ($id)
+            AND deleted=FALSE
         EOD;
 
         $result = $this->db->getConnection()->query($selectFacultyQ);
