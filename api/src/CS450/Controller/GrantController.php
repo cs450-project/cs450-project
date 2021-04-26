@@ -27,10 +27,14 @@ class GrantController
 
     public function __invoke($params)
     {
+        $userID = $params["params"]["id"];
+        if(isset($userID)){
+            return $this->grantFactory->findbyUser($userID);
+        }
         return $this->grantFactory->findAll();
     }
 
     public function getFacultyGrants($params){
-        return $this->grantFactory->findbyUser();
+        return $this->grantFactory->findbyUser($params);
     }
 }

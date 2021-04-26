@@ -13,17 +13,16 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addGroup("/api", function (RouteCollector $r) {
         $r->addRoute("GET", "/", "CS450\Controller\HomeController");
 
-        //Creating a Group for Grants, so that we could choose between seeing ALL grants and all grants under a specific user.
-        //Admittedly, I haven't figured out what I could do here.
-        /** 
-         * $r->addGroup("/grants", function (RouteCollector $r) {
-         * $grantControllerName = "CS450\Controller\GrantController";
-         * $r->addRoute("POST", "/grants", [$grantControllerName, "__invoke"]);
-         * $r->addRoute("POST", "/search", [$grantControllerName, "getFacultyGrants"]);
-         * }
-        */
-        $r->addRoute("GET", "/grants", "CS450\Controller\GrantController");
-        $r->addRoute("GET", "/departments", "CS450\Controller\DepartmentController");
+        /*Creating a Group for Grants, so that we could choose between seeing ALL grants and all grants under a specific user.
+        $r->addGroup("/grants", function (RouteCollector $r) {
+         $grantControllerName = "CS450\Controller\GrantController";
+         $r->addRoute("GET", "/DashBoard", [$grantControllerName, "__invoke"]);
+         $r->addRoute("GET", "/search", [$grantControllerName, "getFacultyGrants"]);
+         });*/
+       
+       $r->addRoute("GET", "/grants", "CS450\Controller\GrantController");
+       $r->addRoute("GET", "user/{id:\d?}/grants", "CS450\Controller\GrantController");
+       $r->addRoute("GET", "/departments", "CS450\Controller\DepartmentController");
 
         $r->addGroup("/auth", function (RouteCollector $r) {
             $authControllerName = "CS450\Controller\AuthController";

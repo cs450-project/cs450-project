@@ -1,9 +1,15 @@
 <template>
   <div>
-    <b-alert fade :show="emailSent" dismissible @dismissed="emailSent = false">
-      An email has been sent to {{ form.name }} @ {{ form.email }}
-    </b-alert>
     <b-form @submit.prevent="onSubmit">
+        <b-form-group label="Current Faculty's User ID:" label-for="id">
+         <b-form-input
+          id="id"
+          v-model="form.id"
+          placeholder="Enter Your ID."
+          required
+        ></b-form-input>
+        </b-form-group>
+
       <b-form-group label="Current Faculty's Name:" label-for="name">
         <b-form-input
           id="name"
@@ -22,9 +28,31 @@
       </b-form-group>
 
       <div class="ml-auto">
-        <b-button type="submit" variant="primary">Submit</b-button>
+        <b-button type="submit" variant="primary">Search</b-button>
       </div>
     </b-form>
+      <b-card-group columns>
+    <b-card
+      no-body
+      v-for="(grant, i) in grants"
+      :key="i"
+      :border-variant="borderStyle(grant)"
+      :header="grant.title"
+      header-border-variant="secondary"
+    >
+      <b-card-body>
+        <b-card-text>
+          <ul>
+            <li>{{ grant.balance | currency }}</li>
+            <li>{{ grant.originalAmount | currency }}</li>
+          </ul>
+        </b-card-text>
+      </b-card-body>
+      <b-card-footer>
+          <small class="text-muted">{{ grant.status }}</small>
+      </b-card-footer>
+    </b-card>
+  </b-card-group>
   </div>
 </template>
 <!--Took from Invite.vue so that I could only enter both the faculty's name and department
@@ -34,12 +62,13 @@ import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default Vue.extend({
-  name: "Invite",
+  name: "Search",
   data() {
     return {
       form: {
         name: "",
         department: "",
+        id: "",
       },
     };
   },
@@ -50,11 +79,18 @@ export default Vue.extend({
     this.fetchDepartments();
   },
   methods: {
-    ...mapActions(["fetchDepartments", "sendInvite"]),
+    ...mapActions(["fetchDepartments", "fetchFacultyGrants"]),
     onSubmit() {
-        /**
-         * Do I do something here.
-         */
+        this.fetchFacultyGrants();
+    },
+    borderStyle(grant) {
+        const styles = {
+            "PENDING": "warning",
+            "APPROVED": "success",
+            "DENIED": "danger",
+        };
+
+        return styles[grant.status];
     },
   },
 });

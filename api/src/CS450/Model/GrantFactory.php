@@ -47,18 +47,13 @@ final class GrantFactory {
         return $grants;
     }
 
-    public function findbyUser($params):array{
-        $userName=$params["name"];
-        // Wrote it just in case I need it
-        $department=$params["department"];
+    public function findbyUser($id):array{
+
         $selectUserGrants = <<<EOD
-            SELECT a.name as faculty_name , c.grant_number, c.title, d.name as department from tbl_fact_users a
-            JOIN (SELECT grant_i , user_id FROM tbl_map_grant_users) b on a.id = b.user_id JOIN tbl_fact_grants c on b.grant_id = c.source_id
-            JOIN tbl_fact_departments d on a.department = d.id
-            WHERE a.user_role = ‘FACULTY’
-            AND a.name=$userName 
-            AND d.name=$department
-            AND c.status in ('PENDING' , 'APPROVED');
+            SELECT u.name, g.grant_number, g.title, d.name 
+            FROM tbl_fact_users AS u, tbl_fact_grants AS g, tbl_fact_departments as d, tbl_fact_map_grant_users as mgu 
+            WHERE u.id = mgu.user_id AND mgu.grant_id = g.source_id AND u.department = d.id AND u.user_role="FACULTY" 
+            AND g.status in ('PENDING' , 'APPROVED') AND u.id="$id";
         EOD;
 
         $conn = $this->db->getConnection();
