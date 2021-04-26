@@ -29,12 +29,15 @@ final class User implements \JsonSerializable {
         return $this->name;
     }
 
-    public function getEmail(): EmailAddress {
+    public function getEmail(): ?EmailAddress {
         if ($this->email instanceof EmailAddress) {
             return $this->email;
         }
-        $this->email = EmailAddress::fromString($this->email);
-        return $this->email;
+        if ($this->email) {
+            return $this->email = EmailAddress::fromString($this->email);
+        }
+        
+        return null;
     }
 
     public function getPasswordHash(): string {

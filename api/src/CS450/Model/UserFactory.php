@@ -60,14 +60,16 @@ final class UserFactory {
 
     public function getFacultyInDepartmentForAdminId($id) {
         $selectFacultyQ = <<<EOD
-            SELECT * FROM tbl_fact_users
+            SELECT u.id, u.name, u.user_role, d.name as department FROM tbl_fact_users u
+            LEFT JOIN tbl_fact_departments d
+            ON u.department=d.id
             WHERE department = (
                 SELECT department
                 FROM tbl_fact_users
                 WHERE id=$id
             )
-            AND id NOT IN ($id)
-            AND deleted=FALSE
+            AND u.id NOT IN ($id)
+            AND u.deleted=FALSE
         EOD;
 
         $result = $this->db->getConnection()->query($selectFacultyQ);
