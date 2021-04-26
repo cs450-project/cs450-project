@@ -138,14 +138,14 @@ export default new Vuex.Store({
     },
     async fetchFaculty({ commit }) {
       try {
-        const { data } = await axios.get("/api/faculty");
-        commit("setFacuty", data);
+        const { data } = await axios.get("/api/admin/faculty");
+        commit("setFaculty", data);
       } catch {
         console.log("bang!");
       }
     },
     deleteFaculty({ commit }, facultyId) {
-      return axios.delete(`/api/faculty/${facultyId}`).then(() => {
+      return axios.delete(`/api/admin/faculty/${facultyId}`).then(() => {
         this.dispatch("fetchFaculty");
       })
     },

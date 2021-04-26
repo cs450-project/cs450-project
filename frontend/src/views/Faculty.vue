@@ -21,7 +21,7 @@ export default Vue.extend({
     name: "Faculty",
     data() {
         return {
-            fields: ["name", "department", "funding", "actions"],
+            fields: ["name", "department", "actions"],
         };
     },
     computed: {
