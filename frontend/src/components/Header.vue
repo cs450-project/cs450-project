@@ -28,17 +28,20 @@
     </b-nav-item-dropdown>
     </b-navbar-nav>
 
-    <b-nav-item>
-      <router-link to="/about">About</router-link>
-    </b-nav-item>
+    <b-navbar-nav class="ml-auto">
+        <b-nav-item right>
+        <router-link to="/about">About</router-link>
+      </b-nav-item>
     <b-nav-item>
     <router-link v-if="authenticated" to="/search">Faculty Grants</router-link>
     </b-nav-item>
-    <b-nav-item class="ml-auto" @click="logout">
-      <router-link v-if="authenticated" to="">Logout</router-link>
-      <router-link v-else to="/login">Login</router-link>
-    </b-nav-item>
-  </b-nav>
+      <b-nav-item  @click="logout" right >
+        <router-link v-if="authenticated" to="">Logout</router-link>
+        <router-link v-else to="/login">Login</router-link>
+      </b-nav-item>
+    </b-navbar-nav>
+  </b-navbar>
+  </div>
 </template>
 
 <script>

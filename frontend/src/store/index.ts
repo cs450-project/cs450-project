@@ -43,7 +43,7 @@ export default new Vuex.Store({
       });
     },
     user: (state) => {
-    return state.authData?.user;}
+    return state.authData?.user;},
     studentOptions: (state) => {
       return state.students.map((student: { uin: number; name: string }) => {
         return {
