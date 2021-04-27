@@ -10,7 +10,7 @@
           required
         ></b-form-input>
         </b-form-group>
-<!--
+<!-- Adding components for ideas I had for implementing featyre
       <b-form-group label="Current Faculty's Name:" label-for="name">
         <b-form-input
           id="name"
@@ -32,7 +32,7 @@
         <b-button type="submit" variant="primary">Search</b-button>
       </div>
     </b-form> 
-    <!--
+    <!--  Used for listing grants
     <b-card-group columns>
     <b-card
       no-body
@@ -89,11 +89,11 @@ export default Vue.extend({
     this.fetchDepartments();
   },
   methods: {
-    ...mapActions(["fetchDepartments", "fetchFacultyGrants"]),
+    ...mapActions(["fetchDepartments", "fetchFacultyGrants", "fetchGrants"]),
     onSubmit() {
         this.fetchFacultyGrants(this.form.id);
     },
-    /*
+    
     borderStyle(grant) {
         const styles = {
             "PENDING": "warning",
@@ -102,7 +102,7 @@ export default Vue.extend({
         };
 
         return styles[grant.status];
-    }, */
+    },
   },
 });
 </script>

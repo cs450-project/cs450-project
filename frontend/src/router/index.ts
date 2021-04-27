@@ -86,6 +86,15 @@ const routes: Array<RouteConfig> = [
       requiresAuth: true,
     },
   },
+   //Adding my component for Search.vue
+   {
+    path: "/search",
+    name: "Search",
+    component: Search,
+    meta: {
+      requiresAuth: true,
+    },
+  },
   {
     path: "/faculty",
     name: "Faculty",
