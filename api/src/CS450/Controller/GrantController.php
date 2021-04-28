@@ -28,7 +28,7 @@ class GrantController
     public function __invoke($params)
     {
         if (empty($params["token"])) {
-            return;
+            return [];
         }
 
         return $this->grantFactory->findGrantsForUserId($params["token"]["uid"]);
